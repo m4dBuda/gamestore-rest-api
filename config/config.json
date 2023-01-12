@@ -1,7 +1,7 @@
 {
   "dev": {
-    "username": "root",
-    "password": "5064",
+    "username": "seu_username_db",
+    "password": "sua_senha_db",
     "database": "db_first_store",
     "host": "127.0.0.1",
     "dialect": "mysql",
