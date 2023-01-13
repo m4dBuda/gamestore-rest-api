@@ -5,7 +5,6 @@ module.exports = (sequelize, DataTypes, nomeTable = 'usuarios') => {
 
   Usuarios.init(
     {
-      id: DataTypes.INTEGER,
       nome: DataTypes.STRING,
       cpf: DataTypes.STRING,
       senha: DataTypes.STRING,
@@ -15,6 +14,7 @@ module.exports = (sequelize, DataTypes, nomeTable = 'usuarios') => {
       endereco: DataTypes.STRING,
       endereco2: DataTypes.STRING,
       id_tipo_usuario: DataTypes.INTEGER,
+      ativo: DataTypes.BOOLEAN,
       criado_em: DataTypes.DATE,
       alterado_em: DataTypes.DATE,
     },
