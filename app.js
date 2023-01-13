@@ -3,6 +3,8 @@ const http = require('http');
 const morgan = require('morgan');
 
 const produtosRoutes = require('./api/routes/produtos');
+const usuariosRoutes = require('./api/routes/usuarios');
+const loginRoutes = require('./api/routes/login');
 
 const app = express();
 app.use(express.json({ limit: '50mb' }));
@@ -31,6 +33,8 @@ app.use((req, res, next) => {
 });
 
 app.use('/produtos', produtosRoutes);
+app.use('/usuarios', usuariosRoutes);
+app.use('/login', loginRoutes);
 
 app.use((req, res, next) => {
   const error = Error('Not allowed.');
