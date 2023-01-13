@@ -1,5 +1,5 @@
 ﻿# Host: localhost  (Version 8.0.11)
-# Date: 2023-01-11 21:59:56
+# Date: 2023-01-12 22:04:42
 # Generator: MySQL-Front 6.1  (Build 1.26)
 
 
@@ -64,6 +64,7 @@ CREATE TABLE `usuarios` (
   `endereco` varchar(255) DEFAULT NULL,
   `endereco2` varchar(255) DEFAULT NULL,
   `id_tipo_usuario` int(2) DEFAULT '1',
+  `ativo` tinyint(1) DEFAULT '1',
   `criado_em` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `alterado_em` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -74,3 +75,4 @@ CREATE TABLE `usuarios` (
 # Data for table "usuarios"
 #
 
+INSERT INTO `usuarios` VALUES (1,'Edição de teste','111.222.333.44','$2b$12$9fojJTbiyRO5QGPemU.0We9MO22gd9.1lyhmO1N5DV3Q8idWWaIBy','joaootavio@email.com','16/11/87','(62)9-8899-7766','Rua teste, nº 1, Qd. 1, Lt. 1','Edificio Agulhas Negras, Bloco 2, Apto 1402',1,1,'2023-01-12 21:37:48','2023-01-12 21:52:23'),(2,'Teste 2','333.222.333.44','$2b$12$xD4OVHr7etlNgviyGbVuN.h3fo4nYqnl.bEsMCh0jFz5d7hXBOIUe','teste2@email.com','05/12/1990','(62)9-9580-7060','Rua teste, nº 1, Qd. 1, Lt. 1','Casa azul, portão marrom',1,1,'2023-01-12 21:42:32',NULL);
