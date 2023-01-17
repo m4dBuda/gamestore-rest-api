@@ -2,16 +2,16 @@ const express = require('express');
 const usuariosController = require('../controllers/usuarios');
 const router = express.Router();
 
+router.post('/', (req, res) => {
+  usuariosController.create(req, res);
+});
+
 router.get('/', (req, res) => {
   usuariosController.getAll(req, res);
 });
 
 router.get('/:id', (req, res) => {
   usuariosController.getById(req, res);
-});
-
-router.post('/', (req, res) => {
-  usuariosController.create(req, res);
 });
 
 router.put('/:id', (req, res) => {
