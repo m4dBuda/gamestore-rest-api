@@ -5,3 +5,5 @@ const router = express.Router();
 router.get('/', (req, res) => {
   loginController.login(req, res);
 });
+
+module.exports = router;
