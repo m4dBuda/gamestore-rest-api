@@ -9,9 +9,9 @@ function getFiltro(req) {
     },
   };
 
-  if (req.query.nome) {
-    jsonObj.where['nome'] = {
-      [Op.like]: `%${req.query.nome}%`,
+  if (req.query.nome_produto) {
+    jsonObj.where['nome_produto'] = {
+      [Op.like]: `%${req.query.nome_produto}%`,
     };
   }
 
@@ -49,9 +49,10 @@ module.exports = {
   async getById(req, res) {
     const sequelize = helpers.getSequelize(req.query.nomedb);
     try {
+      const { id } = req.params;
       const produto = await Produtos(sequelize, Sequelize.DataTypes).findOne({
         where: {
-          id: req.params.id,
+          id,
         },
       });
 
@@ -67,12 +68,14 @@ module.exports = {
     const sequelize = helpers.getSequelize(req.query.nomedb);
     try {
       const produto = await Produtos(sequelize, Sequelize.DataTypes).create({
-        nome: req.body.nome,
+        nome_produto: req.body.nome_produto,
+        descricao_produto: req.body.descricao_produto,
+        quantidade: req.body.quantidade,
         preco: req.body.preco,
         rating: req.body.rating,
-        imagem: req.body.imagem,
-        descricao: req.body.descricao,
+        caminho_imagem: req.body.imagem,
         criado_por_id_usuario: req.body.criado_por_id_usuario,
+        id_tipo_produto: req.body.id_tipo_produto,
       });
 
       res.status(200).send({ mensagem: `${produto.nome} registrado com sucesso!`, produto });
@@ -86,44 +89,29 @@ module.exports = {
   async update(req, res) {
     const sequelize = helpers.getSequelize(req.query.nomedb);
     try {
-      const produto = await Produtos(sequelize, Sequelize.DataTypes).findOne({
-        where: { id: req.params.id },
-      });
+      const { id } = req.params;
+      const produto = await Produtos(sequelize, Sequelize.DataTypes).update(
+        {
+          nome_produto: req.body.nome_produto,
+          descricao_produto: req.body.descricao_produto,
+          quantidade: req.body.quantidade,
+          preco: req.body.preco,
+          rating: req.body.rating,
+          caminho_imagem: req.body.imagem,
+          id_tipo_produto: req.body.id_tipo_produto,
+          alterado_em: new Date(),
+          alterado_por_id_usuario: req.body.alterado_por_id_usuario,
+        },
+        {
+          where: { id },
+        },
+      );
 
-      if (produto) {
-        if (req.query.ativar == true) {
-          await Produtos(sequelize, Sequelize.DataTypes).update(
-            {
-              ativo: 1,
-            },
-            {
-              where: {
-                id: req.params.id,
-              },
-            },
-          );
-          return res.status(200).send({ mensagem: `Produto reativado!` });
-        }
-
-        await Produtos(sequelize, Sequelize.DataTypes).update(
-          {
-            nome: req.body.nome,
-            preco: req.body.preco,
-            rating: req.body.rating,
-            imagem: req.body.imagem,
-            descricao: req.body.descricao,
-            alterado_em: new Date(),
-            alterado_por_id_usuario: req.body.alterado_por_id_usuario,
-          },
-          {
-            where: { id: req.params.id },
-          },
-        );
-
-        res.status(200).send({ mensagem: `${produto.nome} editado com sucesso!` });
-      } else {
-        res.status(400).send({ mensagem: `Produto não encontrado ou desativado.` });
-      }
+      res.status(200).send(
+        { mensagem: `${produto.nome_produto} editado com sucesso!` } || {
+          mensagem: `Produto não encontrado`,
+        },
+      );
     } catch (error) {
       res.status(500).send(error);
     } finally {
@@ -134,26 +122,39 @@ module.exports = {
   async delete(req, res) {
     const sequelize = helpers.getSequelize(req.query.nomedb);
     try {
+      const { id } = req.params;
+
       const produto = await Produtos(sequelize, Sequelize.DataTypes).findOne({
-        where: { id: req.params.id, ativo: 1 },
+        where: { id },
       });
 
       if (produto) {
+        let estado;
+        let novoEstado;
+        if (produto.ativo == 0) {
+          estado = 1;
+          novoEstado = 'ativado';
+        }
+        if (produto.ativo == 1) {
+          estado = 0;
+          novoEstado = 'inativado';
+        }
+
         await Produtos(sequelize, Sequelize.DataTypes).update(
           {
-            ativo: 0,
+            ativo: estado,
             alterado_em: new Date(),
             alterado_por_id_usuario: req.body.alterado_por_id_usuario,
           },
           {
             where: {
-              id: req.params.id,
+              id,
             },
           },
         );
-        res.status(200).send({ mensagem: `${produto.nome} desativado com sucesso!`, produto });
+        res.status(200).send({ mensagem: `Produto ${novoEstado} com sucesso` });
       } else {
-        res.status(400).send({ mensagem: `Produto não encontrado ou já está desativado!` });
+        res.status(400).send({ mensagem: `Produto não encontrado` });
       }
     } catch (error) {
       res.status(500).send(error);
