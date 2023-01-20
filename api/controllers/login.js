@@ -11,8 +11,8 @@ async function compararSenhasLogin(req, usuarioLogin) {
 
 // Função para validar nova_senha com senha_atual na alteração de senhas
 // Se as senhas forem iguais, não permitirá a edição.
-async function validarSenhaNova(usuario, senha_nova) {
-  const boolean = await bcrypt.compare(senha_nova, usuario.senha);
+async function validarSenhaNova(usuario, nova_senha) {
+  const boolean = await bcrypt.compare(nova_senha, usuario.senha);
   return boolean;
 }
 
@@ -89,7 +89,7 @@ module.exports = {
       // Comparando `senha` recebida do body com senha armazenada no banco.
       const compararSenhas = await compararSenhasLogin(req, usuario);
       if (compararSenhas) {
-        const validarSenha = await validarSenhaNova(usuario, senha_nova);
+        const validarSenha = await validarSenhaNova(usuario, nova_senha);
         if (validarSenha == true) {
           res
             .status(400)
