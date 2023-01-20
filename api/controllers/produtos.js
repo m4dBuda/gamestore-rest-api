@@ -78,7 +78,7 @@ module.exports = {
         id_tipo_produto: req.body.id_tipo_produto,
       });
 
-      res.status(200).send({ mensagem: `${produto.nome} registrado com sucesso!`, produto });
+      res.status(200).send({ mensagem: `Produto registrado com sucesso!`, produto });
     } catch (error) {
       res.status(500).send(error);
     } finally {
@@ -108,7 +108,7 @@ module.exports = {
       );
 
       res.status(200).send(
-        { mensagem: `${produto.nome_produto} editado com sucesso!` } || {
+        { mensagem: `Produto editado com sucesso!` } || {
           mensagem: `Produto não encontrado`,
         },
       );

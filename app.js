@@ -5,7 +5,7 @@ const morgan = require('morgan');
 const produtosRoutes = require('./api/routes/produtos');
 const usuariosRoutes = require('./api/routes/usuarios');
 const loginRoutes = require('./api/routes/login');
-const tipoProdutoRoutes = require('./api/routes/tipo_produto');
+const tipoProdutoRoutes = require('./api/routes/tipo_produtos');
 const carrinhoRoutes = require('./api/routes/carrinho');
 
 const app = express();
@@ -37,11 +37,11 @@ app.use((req, res, next) => {
 app.use('/produtos', produtosRoutes);
 app.use('/usuarios', usuariosRoutes);
 app.use('/login', loginRoutes);
-app.use('/tipo_produto', tipoProdutoRoutes);
+app.use('/tipo_produtos', tipoProdutoRoutes);
 app.use('/carrinho', carrinhoRoutes);
 
 app.use((req, res, next) => {
-  const error = Error('Not allowed.');
+  const error = Error('Rota não encontrada.');
   error.status = 404;
   next(error);
 });

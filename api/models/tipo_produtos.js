@@ -1,9 +1,9 @@
 const { Model } = require('sequelize');
 
-module.exports = (sequelize, DataTypes, nomeTable = 'tipo_produto') => {
-  class TipoProduto extends Model {}
+module.exports = (sequelize, DataTypes, nomeTable = 'tipo_produtos') => {
+  class TipoProdutos extends Model {}
 
-  TipoProduto.init(
+  TipoProdutos.init(
     {
       descricao: DataTypes.STRING,
       ativo: DataTypes.BOOLEAN,
@@ -18,5 +18,5 @@ module.exports = (sequelize, DataTypes, nomeTable = 'tipo_produto') => {
       timestamps: false,
     },
   );
-  return TipoProduto;
+  return TipoProdutos;
 };
