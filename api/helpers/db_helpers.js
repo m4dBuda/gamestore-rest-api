@@ -68,6 +68,7 @@ async function getUsuarioByIdObjeto(objeto, req) {
 
 async function getProdutosCarrinho(carrinho, req) {
   const sequelize = helpers.getSequelize(req.query.nomedb);
+  const dados_produto = [];
 
   for (let idProduto of carrinho.id_produtos) {
     const produto = await Produtos(sequelize, Sequelize.DataTypes).findOne({
@@ -75,8 +76,11 @@ async function getProdutosCarrinho(carrinho, req) {
         id: idProduto,
       },
     });
-    carrinho.dataValues.dados_produto = produto;
+    if (produto) {
+      dados_produto.push(produto);
+    }
   }
+  carrinho.dataValues.dados_produto = dados_produto;
   return carrinho;
 }
 
