@@ -1,29 +1,40 @@
 const { Sequelize, where } = require('sequelize');
 const Carrinho = require('../models/carrinho');
 const helpers = require('../helpers/helpers');
+const dbHelpers = require('../helpers/db_helpers');
+const Produtos = require('../models/produtos');
 
 module.exports = {
   async create(req, res) {
     const sequelize = helpers.getSequelize(req.query.nomedb);
     try {
-      const carrinho = await Carrinho(sequelize, Sequelize.DataTypes).create({
-        id_produtos: req.body.id_produtos,
-        id_usuario: req.body.id_usuario,
-      });
+      const { forcar } = req.query;
 
-      res.status(200).send({ mensagem: `Carrinho criado com sucesso!`, carrinho });
+      const validarCarrinho = await dbHelpers.isCarrinhoFinalizado(req, forcar);
+      if (validarCarrinho) {
+        const carrinho = await Carrinho(sequelize, Sequelize.DataTypes, 'carrinho').create({
+          id_produtos: req.body.id_produtos,
+          id_usuario: req.body.id_usuario,
+        });
+
+        res.status(200).send({ mensagem: `Carrinho criado com sucesso!`, carrinho });
+      }
+      if (!validarCarrinho) {
+        res.status(200).send({ mensagem: `Já existe um carrinho ativo para este usuário!` });
+      }
     } catch (error) {
       res.status(500).send({ error });
     } finally {
       sequelize.close();
     }
   },
+
   async getAll(req, res) {
     const sequelize = helpers.getSequelize(req.query.nomedb);
     try {
-      const carrinho = await Carrinho(sequelize, Sequelize.DataTypes).findAll();
+      const carrinhos = await Carrinho(sequelize, Sequelize.DataTypes).findAll();
 
-      res.status(200).send(carrinho || { error: `Não há carrinhos para visualizar.` });
+      res.status(200).send(carrinhos || { error: `Não há carrinhos para visualizar.` });
     } catch (error) {
       res.status(500).send({ error });
     } finally {
@@ -38,9 +49,11 @@ module.exports = {
       const carrinho = await Carrinho(sequelize, Sequelize.DataTypes).findOne({
         where: {
           id_usuario: id,
+          finalizado: 0,
         },
       });
-
+      await dbHelpers.getUsuarioByIdObjeto(carrinho, req);
+      await dbHelpers.getProdutosCarrinho(carrinho, req);
       res.status(200).send(carrinho || { error: `Carrinho não encontrado` });
     } catch (error) {
       res.status(500).send({ error });

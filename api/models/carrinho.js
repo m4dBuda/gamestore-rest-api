@@ -6,8 +6,8 @@ module.exports = (sequelize, DataTypes, nomeTable = 'carrinho') => {
   Carrinho.init(
     {
       id_produtos: DataTypes.STRING,
-      finalizado: DataTypes.BOOLEAN,
       id_usuario: DataTypes.INTEGER,
+      finalizado: DataTypes.BOOLEAN,
       criado_em: DataTypes.DATE,
       alterado_em: DataTypes.DATE,
     },

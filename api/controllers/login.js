@@ -15,7 +15,6 @@ async function validarSenhaNova(usuario, nova_senha) {
   const boolean = await bcrypt.compare(nova_senha, usuario.senha);
   return boolean;
 }
-
 /*
   URL: http://localhost:13700/login?nomedb=db_first_store
   Método: POST
