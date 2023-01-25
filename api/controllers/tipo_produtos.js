@@ -1,5 +1,6 @@
 const { Sequelize } = require('sequelize');
 const helpers = require('../helpers/helpers');
+const dbHelpers = require('../helpers/db_helpers');
 const TipoProdutos = require('../models/tipo_produtos');
 
 module.exports = {
@@ -9,6 +10,7 @@ module.exports = {
       const tipoProdutos = await TipoProdutos(sequelize, Sequelize.DataTypes).create({
         descricao: req.body.descricao,
       });
+
       res
         .status(200)
         .send({ mensagem: `Tipo produto ${tipoProdutos.descricao} cadastrado com sucesso` });
@@ -23,6 +25,9 @@ module.exports = {
     try {
       const tipoProduto = await TipoProdutos(sequelize, Sequelize.DataTypes).findAll();
 
+      if (req.query.relacionar_usuario == true) {
+        await dbHelpers.getUsuarioByCriadoPorLista(tipoProduto, req);
+      }
       res.status(200).send(tipoProduto || { error: `Tipo produto não encontrado ou não existe.` });
     } catch (error) {
       res.status(500).send({ error });

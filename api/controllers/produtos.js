@@ -1,6 +1,7 @@
 const { Sequelize, Op } = require('sequelize');
 const Produtos = require('../models/produtos');
 const helpers = require('../helpers/helpers');
+const dbHelpers = require('../helpers/db_helpers');
 
 function getFiltro(req) {
   jsonObj = {
@@ -36,7 +37,12 @@ module.exports = {
   async getAll(req, res) {
     const sequelize = helpers.getSequelize(req.query.nomedb);
     try {
+      const { relacionar_usuarios } = req.query;
       const produtos = await Produtos(sequelize, Sequelize.DataTypes).findAll(getFiltro(req));
+
+      if (relacionar_usuarios == true) {
+        await dbHelpers.getUsuarioByCriadoPorLista(produtos, req);
+      }
 
       res.status(200).send(produtos || { mensagem: `Produto não encontrado!` });
     } catch (error) {
