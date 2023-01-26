@@ -10,7 +10,7 @@ async function getUsuarioByCriadoPorLista(lista, req) {
   for (const item of lista) {
     const usuario = await Usuarios(sequelize, Sequelize.DataTypes).findOne({
       where: {
-        id: item.criado_por_id_usuario,
+        id: item.id_usuario,
       },
     });
 
@@ -71,7 +71,7 @@ async function getProdutosCarrinho(carrinho, req) {
   const dados_produto = [];
 
   for (let idProduto of carrinho.id_produtos) {
-    const produto = await Produtos(sequelize, Sequelize.DataTypes).findOne({
+    const produto = await Produtos(sequelize, Sequelize.DataTypes, 'view_produtos').findOne({
       where: {
         id: idProduto,
       },

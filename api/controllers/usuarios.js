@@ -42,7 +42,7 @@ module.exports = {
   async getAll(req, res) {
     const sequelize = helpers.getSequelize(req.query.nomedb);
     try {
-      const usuarios = await Usuarios(sequelize, Sequelize.DataTypes).findAll();
+      const usuarios = await Usuarios(sequelize, Sequelize.DataTypes, 'view_usuarios').findAll();
 
       res.status(200).send(usuarios || { mensagem: `Usuário não encontrado` });
     } catch (error) {
@@ -60,7 +60,7 @@ module.exports = {
   async getById(req, res) {
     const sequelize = helpers.getSequelize(req.query.nomedb);
     try {
-      const usuario = await Usuarios(sequelize, Sequelize.DataTypes).findOne({
+      const usuario = await Usuarios(sequelize, Sequelize.DataTypes, 'view_usuarios').findOne({
         where: {
           id: req.params.id,
         },
@@ -116,6 +116,7 @@ module.exports = {
           senha: hash,
           email: req.body.email,
           data_nascimento: req.body.data_nascimento,
+          id_tipo_usuario: req.body.id_tipo_usuario,
           telefone: req.body.telefone,
           endereco: req.body.endereco,
           endereco2: req.body.endereco2,
@@ -154,6 +155,7 @@ module.exports = {
           nome: req.body.nome,
           email: req.body.email,
           data_nascimento: req.body.data_nascimento,
+          id_tipo_usuario: req.body.id_tipo_usuario,
           telefone: req.body.telefone,
           endereco: req.body.endereco,
           endereco2: req.body.endereco2,
