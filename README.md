@@ -15,31 +15,19 @@ To clone this API:
 ## Installation
 This API uses the following frameworks and libraries:
 
-Express
-Sequelize,
-Jest,
-Supertest,
-Bcrypt,
-Moment,
-Morgan,
-Mysql2,
-Nodemon,
-Http
+Express, Sequelize, Jest, Supertest, Bcrypt, Moment, Morgan, Mysql2, Nodemon, Http.
+
+The database was created using `MySQL`.
 
 You can try installing with `npm install`, but if it doesn't work you can try running the npm install command declaring the framework name, example: `npm i sequelize`
-
-
-## Name
-Games-Store API.
-
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
 
 ## Usage
 This API was made for a Video-game Shop made in React.js, you can use it
 to manage users, logins and password change, and also to store products,
 put them into a cart, show the card with the products and related things.
 Theres also a table for user privileges in your application, that you can explore and develop.
+
+The application database is on the `db_first_store` folder, you can import the .sql file from there!
 
 ## Support
 If you need any help or want to contribute feel free to throw me a message. =)
