@@ -15,7 +15,7 @@ To clone this API:
 ## Installation
 This API uses the following frameworks and libraries:
 
-Express, Sequelize, Jest, Supertest, Bcrypt, Moment, Morgan, Mysql2, Nodemon, Http.
+`Express`, `Sequelize`, `Jest`, `Supertest`, `Bcrypt`, `Moment`, `Morgan`, `Mysql2`, `Nodemon`, `Http`.
 
 The database was created using `MySQL`.
 
