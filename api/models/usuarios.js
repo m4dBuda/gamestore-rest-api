@@ -1,4 +1,5 @@
 const { Model } = require('sequelize');
+const strings = require('../helpers/strings');
 
 module.exports = (sequelize, DataTypes, nomeTable = 'usuarios') => {
   class Usuarios extends Model {}
@@ -25,7 +26,7 @@ module.exports = (sequelize, DataTypes, nomeTable = 'usuarios') => {
     },
   );
 
-  if (nomeTable === 'view_usuarios') {
+  if (nomeTable === strings.VIEW_USUARIOS) {
     Usuarios.init(
       {
         nome: DataTypes.STRING,

@@ -62,7 +62,6 @@ module.exports = {
   /*
   URL: http://localhost:13700/carrinho/1?nomedb=db_first_store
   Método: GET
-  
  */
   async getById(req, res) {
     const sequelize = helpers.getSequelize(req.query.nomedb);

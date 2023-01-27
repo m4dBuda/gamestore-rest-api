@@ -2,6 +2,7 @@ const { Sequelize } = require('sequelize');
 const Usuarios = require('../models/usuarios');
 const bcrypt = require('bcrypt');
 const helpers = require('../helpers/helpers');
+const strings = require('../helpers/strings');
 
 // Função para verificar se o CPF já está cadastrado.
 async function verificarCpfRepetido(req) {
@@ -42,9 +43,13 @@ module.exports = {
   async getAll(req, res) {
     const sequelize = helpers.getSequelize(req.query.nomedb);
     try {
-      const usuarios = await Usuarios(sequelize, Sequelize.DataTypes, 'view_usuarios').findAll();
+      const usuarios = await Usuarios(
+        sequelize,
+        Sequelize.DataTypes,
+        strings.VIEW_USUARIOS,
+      ).findAll();
 
-      res.status(200).send(usuarios || { mensagem: `Usuário não encontrado` });
+      res.status(200).send(usuarios || { mensagem: `Usuário ${strings.naoEncontrado}` });
     } catch (error) {
       res.status(500).send({ error });
     } finally {
@@ -60,13 +65,15 @@ module.exports = {
   async getById(req, res) {
     const sequelize = helpers.getSequelize(req.query.nomedb);
     try {
-      const usuario = await Usuarios(sequelize, Sequelize.DataTypes, 'view_usuarios').findOne({
-        where: {
-          id: req.params.id,
+      const usuario = await Usuarios(sequelize, Sequelize.DataTypes, strings.VIEW_USUARIOS).findOne(
+        {
+          where: {
+            id: req.params.id,
+          },
         },
-      });
+      );
 
-      res.status(200).send(usuario || { mensagem: `Usuário não encontrado` });
+      res.status(200).send(usuario || { mensagem: `Usuário ${strings.naoEncontrado}` });
     } catch (error) {
       res.status(500).send({ error });
     } finally {
@@ -121,7 +128,7 @@ module.exports = {
           endereco: req.body.endereco,
           endereco2: req.body.endereco2,
         });
-        res.status(200).send({ mensagem: `Usuário registrado com sucesso`, usuario });
+        res.status(200).send({ mensagem: `Usuário ${strings.criadoComSucesso}`, id: usuario.id });
       }
     } catch (error) {
       res.status(500).send({ error });
@@ -166,7 +173,7 @@ module.exports = {
         },
       );
 
-      res.status(200).send({ mensagem: `Usuário editado com sucesso!` });
+      res.status(200).send({ mensagem: `Usuário ${strings.editadoComSucesso}` });
     } catch (error) {
       res.status(500).send({ error });
     } finally {
@@ -210,7 +217,7 @@ module.exports = {
         );
         res.status(200).send({ mensagem: `Usuário ${novoEstado} com sucesso!` });
       } else {
-        res.status(400).send({ error: `Usuário não encontrado` });
+        res.status(400).send({ error: `Usuário ${strings.naoEncontrado}` });
       }
     } catch (error) {
       res.status(500).send({ error });
