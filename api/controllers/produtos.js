@@ -106,7 +106,7 @@ module.exports = {
         id_tipo_produto: req.body.id_tipo_produto,
       });
 
-      res.status(200).send({ mensagem: `Produto registrado com sucesso!`, produto });
+      res.status(200).send({ mensagem: `Produto registrado com sucesso!`, id: produto.id });
     } catch (error) {
       res.status(500).send(error);
     } finally {

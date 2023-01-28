@@ -83,3 +83,7 @@ test(strings.mensagemTesteDeleteUsuarios2, async () => {
 
   data = await request(app).delete(url).expect(200);
 });
+
+afterAll(async () => {
+  await testHelpers.resetarUsuarioTeste();
+});
