@@ -3,120 +3,137 @@ const Usuarios = require('../models/usuarios');
 const bcrypt = require('bcrypt');
 const helpers = require('../helpers/helpers');
 
-// Função para validar HASH de senhas.
-async function compararSenhasLogin(req, usuarioLogin) {
-  const boolean = await bcrypt.compare(req.body.senha, usuarioLogin.senha);
+// Função para comparar a senha recebida com senha do banco de dados.
+async function compararSenhas(senha, usuario) {
+  const boolean = await bcrypt.compare(senha, usuario.senha);
   return boolean;
 }
 
-// Função para validar nova_senha com senha_atual na alteração de senhas
-// Se as senhas forem iguais, não permitirá a edição.
-async function validarSenhaNova(usuario, nova_senha) {
-  const boolean = await bcrypt.compare(nova_senha, usuario.senha);
-  return boolean;
-}
-/*
-  URL: http://localhost:13700/login?nomedb=db_first_store
+module.exports = {
+  /*
+  URL: http://localhost:13700/login
   Método: POST
   
-  Body esperado para fazer login:
+  Body:
   {
-    
     "email":"teste@email.com",
-    "senha":"1234"
-  
+    "senha":"123456"
   }
-
  */
-module.exports = {
-  async login(req, res) {
-    const sequelize = helpers.getSequelize(req.query.nomedb);
+  login: async (req, res) => {
     try {
-      const usuarioLogin = await Usuarios(sequelize, Sequelize.DataTypes).findOne({
+      // Desestruturar objeto de requisição
+      const { query, body } = req;
+
+      // Obter instância do Sequelize
+      const sequelizeInstance = helpers.getSequelize(query.nomedb);
+
+      // Validação do email
+      const emailRegex =
+        /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      if (!emailRegex.test(body.email)) {
+        return res.status(400).send({ error: 'Formato de e-mail inválido' });
+      }
+
+      // Validação da senha
+      if (body.senha.length < 6) {
+        return res.status(400).send({ error: 'A senha deve ter pelo menos 6 caracteres' });
+      }
+      // Buscar usuário no banco de dados
+      const usuarioLogin = await Usuarios(sequelizeInstance, Sequelize.DataTypes).findOne({
         where: {
-          email: req.body.email,
+          email: body.email,
           ativo: 1,
         },
       });
-      if (usuarioLogin) {
-        const compararSenhas = await compararSenhasLogin(req, usuarioLogin);
-        if (compararSenhas == true) {
-          res.status(200).send({
-            mensagem: `Login para ${usuarioLogin.email} realizado com sucesso!`,
-          });
-        }
-        if (compararSenhas == false) {
-          res.status(401).send({ error: `Senha incorreta.` });
-        }
-      }
+
+      // Verificar se usuário existe
       if (!usuarioLogin) {
-        res.status(400).send({ error: `Não há nenhuma conta cadastrada com email informado` });
+        return res
+          .status(400)
+          .send({ error: 'Não há nenhuma conta cadastrada com o e-mail informado' });
       }
+
+      // Comparar senhas
+      const senhasConferem = await compararSenhas(body.senha, usuarioLogin);
+      if (!senhasConferem) {
+        return res.status(401).send({ error: 'Senha incorreta.' });
+      }
+      return res
+        .status(200)
+        .send({ message: `Login para ${usuarioLogin.email} realizado com sucesso!` });
     } catch (error) {
-      res.status(500).send(error);
-    } finally {
-      sequelize.close();
+      return res.status(500).send(error);
     }
   },
 
   /*
 
-  URL: http://localhost:13700/login/2?nomedb=db_first_store
+  URL: http://localhost:13700/login/:id
   Método: PUT
 
   Body esperado para alterar senha:
   {
-
     "senha":"123456",
     "senha_nova":"654321"
-
   }
  */
-  async alterarSenha(req, res) {
-    const sequelize = helpers.getSequelize(req.query.nomedb);
+  alterarSenha: async (req, res) => {
     try {
-      const { senha, nova_senha } = req.body;
-      const { id } = req.params;
+      // Desestruturar objeto de requisição
+      const { query, body, params } = req;
 
-      // Função para trocar a senha dentro da conta ( Usuário já está logado )
-      const usuario = await Usuarios(sequelize, Sequelize.DataTypes).findOne({
+      // Obter instância do Sequelize
+      const sequelizeInstance = helpers.getSequelize(query.nomedb);
+
+      // Validar comprimento mínimo da nova senha.
+      if (body.nova_senha.length < 6) {
+        return res.status(400).send({ error: 'A senha deve ter pelo menos 6 caracteres' });
+      }
+
+      // Buscar usuário no banco de dados
+      const usuario = await Usuarios(sequelizeInstance, Sequelize.DataTypes).findOne({
         where: {
-          id,
+          id: params.id,
+          ativo: 1,
         },
       });
 
-      // Comparando `senha` recebida do body com senha armazenada no banco.
-      const compararSenhas = await compararSenhasLogin(req, usuario);
-      if (compararSenhas) {
-        const validarSenha = await validarSenhaNova(usuario, nova_senha);
-        if (validarSenha == true) {
-          res
-            .status(400)
-            .send({ mensagem: `Você não pode usar a mesma senha! Escolha uma nova senha.` });
-        }
-
-        // Criando hash com o valor recebido em `nova_senha` do body.
-        const hashNovaSenha = await bcrypt.hash(nova_senha, 12);
-        // Trocando a senha do usuário com o Hash da `nova_senha` recebida do body
-        await Usuarios(sequelize, Sequelize.DataTypes).update(
-          {
-            senha: hashNovaSenha,
-            alterado_em: new Date(),
-          },
-          {
-            where: {
-              id,
-            },
-          },
-        );
-        res.status(200).send({ mensagem: `Senha alterada com sucesso!` });
-      } else {
-        res.status(401).send({ error: `Senha atual incorreta!` });
+      if (!usuario) {
+        return res.status(400).send({ error: 'Usuário não encontrado ou inativo' });
       }
+
+      // Comparando senhas e validando se a nova senha é igual a senha anterior.
+      const validarSenhas = await compararSenhas(body.senha, usuario);
+
+      if (!validarSenhas) {
+        return res.status(401).send({ error: `Senha atual incorreta!` });
+      }
+
+      if (body.senha === body.nova_senha) {
+        return res
+          .status(400)
+          .send({ mensagem: `Você não pode usar a mesma senha! Escolha uma nova senha.` });
+      }
+
+      // Criando hash com o valor recebido em `nova_senha` do body.
+      const hashNovaSenha = await bcrypt.hash(body.nova_senha, 12);
+
+      // Alterando a senha do usuário.
+      await Usuarios(sequelizeInstance, Sequelize.DataTypes).update(
+        {
+          senha: hashNovaSenha,
+          alterado_em: new Date(),
+        },
+        {
+          where: {
+            id: params.id,
+          },
+        },
+      );
+      return res.status(200).send({ message: `Senha alterada com sucesso!` });
     } catch (error) {
-      res.status(500).send({ error });
-    } finally {
-      sequelize.close();
+      return res.status(500).send({ error });
     }
   },
 };
