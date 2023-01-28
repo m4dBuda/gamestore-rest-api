@@ -12,10 +12,19 @@ To clone this API:
 6. Dont forget to configure the `config/config.json` file to connect to ur database server.
 7. Enjoy it! By default the API route will be `http://localhost:13700/`
 
-## Installation
+## Structure and Installation
+
+This API uses Clean Code Architecture, and it is defined as a restAPI that provides HTTP requests to a server, that handles JSON data and communicates directly to a database.
+
+The data validation is done using `Validator` from NodeJS.
+The tests are done using `Jest` and `Supertest`
+The connection to the database and models are done using `Sequelize` and `Mysql2`
+The password cryptographies and checkings are done using `Bcrypt`
+The time-date data is translated using `Moment`
+
 This API uses the following frameworks and libraries:
 
-`Express`, `Sequelize`, `Jest`, `Supertest`, `Bcrypt`, `Moment`, `Morgan`, `Mysql2`, `Nodemon`, `Http`.
+`Express`, `Sequelize`, `Jest`, `Supertest`, `Bcrypt`, `Moment`, `Morgan`, `Mysql2`, `Nodemon`, `Http`, `Validator`.
 
 The database was created using `MySQL`.
 
