@@ -8,14 +8,13 @@ module.exports = {
   URL: http://localhost:13700/carrinho?nomedb=db_first_store
   Método: POST
   
-  Body esperado para criar um carrinho
   {
     "id_usuario": 4,
     "id_produtos": "3, 3, 4, 6, 1"
   }
 
     Parametros: forcar (true)
-      Irá desativar o último carrinho não finalizado
+      Irá desativar o último carrinho não finalizado do usuário
       e criar um novo carrinho com o body enviado.
  */
   async create(req, res) {
@@ -30,7 +29,9 @@ module.exports = {
           id_usuario: req.body.id_usuario,
         });
 
-        res.status(200).send({ mensagem: `Carrinho criado com sucesso!`, carrinho });
+        res
+          .status(200)
+          .send({ mensagem: `Carrinho criado com sucesso!`, id: carrinho.id, carrinho });
       }
       if (!validarCarrinho) {
         res.status(200).send({ mensagem: `Já existe um carrinho ativo para este usuário!` });

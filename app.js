@@ -13,7 +13,10 @@ app.use(express.json({ limit: '50mb' }));
 app.use(morgan('dev'));
 
 const httpServer = http.createServer(app);
-httpServer.listen(13700);
+
+// Comentar esta linha para realizar testes.
+
+// httpServer.listen(13700);
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');

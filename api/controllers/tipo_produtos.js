@@ -23,7 +23,10 @@ module.exports = {
 
       res
         .status(200)
-        .send({ mensagem: `Tipo produto ${tipoProdutos.descricao} cadastrado com sucesso` });
+        .send({
+          mensagem: `Tipo produto ${tipoProdutos.descricao} cadastrado com sucesso`,
+          id: tipoProdutos.id,
+        });
     } catch (error) {
       res.status(500).send({ error });
     } finally {
