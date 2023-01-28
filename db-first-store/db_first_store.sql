@@ -1,5 +1,5 @@
 ﻿# Host: localhost  (Version 8.0.11)
-# Date: 2023-01-25 21:54:44
+# Date: 2023-01-28 19:01:11
 # Generator: MySQL-Front 6.1  (Build 1.26)
 
 
@@ -42,13 +42,13 @@ CREATE TABLE `usuarios` (
   `alterado_em` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 #
 # Data for table "usuarios"
 #
 
-INSERT INTO `usuarios` VALUES (1,'Julio','111.222.333-44','$2b$12$YS7scSb1Vyn5KPJfNcLaTO4tegbWGrRQ.i/aDEc8DrSwzSBZB9k06','juliocesar@gmail.com','05/12/1990','(62)9-9580-7060','Avenida T-63, nº 1, Qd. 1, Lt. 1','Edífico Agulhas Negras',1,1,'2023-01-19 21:40:44','2023-01-19 22:06:47'),(2,'Leo','444.555.666-77','$2b$12$fvVpZva715Tqc7KvV0wfc.JlfC1asLQRJiG37suDRQlBfBQieBOcO','leonidio@gmail.com','05/12/1990','(62)9-9580-7060','Avenida T-63, nº 1, Qd. 1, Lt. 1','Edífico Agulhas Negras',3,1,'2023-01-23 20:45:19',NULL),(3,'João Otávio','666.777.888-99','$2b$12$4LYPDT3mBmKYuP2A7pHKsuS8bYYl3E8CoumKRip6zInnSs1ruuGg2','otaviodev@gmail.com','05/12/1990','(62)9-9580-7060','Avenida T-63, nº 1, Qd. 1, Lt. 1','Edífico Agulhas Negras',3,1,'2023-01-23 20:45:40',NULL),(4,'Jean','999.888.333-44','$2b$12$kZwCKz3eyYxUXYKBiptMjuEiChVkeXVRL.BDsNWVudY2H4pL/aDQ2','jean@gmail.com','05/12/1990','(62)9-9580-7060','Avenida T-63, nº 1, Qd. 1, Lt. 1','Edífico Agulhas Negras',2,1,'2023-01-25 20:12:46',NULL);
+INSERT INTO `usuarios` VALUES (1,'Julio','111.222.333-44','$2b$12$YS7scSb1Vyn5KPJfNcLaTO4tegbWGrRQ.i/aDEc8DrSwzSBZB9k06','juliocesar@gmail.com','05/12/1990','(62)9-9580-7060','Avenida T-63, nº 1, Qd. 1, Lt. 1','Edífico Agulhas Negras',1,1,'2023-01-19 21:40:44','2023-01-26 19:33:42'),(2,'Leo','444.555.666-77','$2b$12$fvVpZva715Tqc7KvV0wfc.JlfC1asLQRJiG37suDRQlBfBQieBOcO','leonidio@gmail.com','05/12/1990','(62)9-9580-7060','Avenida T-63, nº 1, Qd. 1, Lt. 1','Edífico Agulhas Negras',3,1,'2023-01-23 20:45:19',NULL),(3,'João Otávio','666.777.888-99','$2b$12$4LYPDT3mBmKYuP2A7pHKsuS8bYYl3E8CoumKRip6zInnSs1ruuGg2','otaviodev@gmail.com','05/12/1990','(62)9-9580-7060','Avenida T-63, nº 1, Qd. 1, Lt. 1','Edífico Agulhas Negras',3,1,'2023-01-23 20:45:40',NULL),(4,'Jean','999.888.333-44','$2b$12$kZwCKz3eyYxUXYKBiptMjuEiChVkeXVRL.BDsNWVudY2H4pL/aDQ2','jean@gmail.com','05/12/1990','(62)9-9580-7060','Avenida T-63, nº 1, Qd. 1, Lt. 1','Edífico Agulhas Negras',2,1,'2023-01-25 20:12:46',NULL),(8,'Jean','999.444.333-44','$2b$12$vgESXogCdeGFKblAzZ9YdeC8vGaoLGMZ0mHAtKizruqu0jOdqjAUa','123456@gmail.com','05/12/1990','(62)9-9580-7060','Avenida T-63, nº 1, Qd. 1, Lt. 1','Edífico Agulhas Negras',2,1,'2023-01-26 21:55:22',NULL),(11,'Jean','999.888.999-44','$2b$12$r3nlv.MV37evEJxjAaTGguoE152VjweNWUkG8k0K3tGKBBafkSFLi','12345@gmail.com','05/12/1990','(62)9-9580-7060','Avenida T-63, nº 1, Qd. 1, Lt. 1','Edífico Agulhas Negras',2,1,'2023-01-26 21:59:19',NULL);
 
 #
 # Structure for table "tipo_produtos"
@@ -69,13 +69,13 @@ CREATE TABLE `tipo_produtos` (
   KEY `alterado_por_id_usuario` (`alterado_por_id_usuario`),
   CONSTRAINT `tipo_produto_ibfk_1` FOREIGN KEY (`criado_por_id_usuario`) REFERENCES `usuarios` (`id`),
   CONSTRAINT `tipo_produto_ibfk_2` FOREIGN KEY (`alterado_por_id_usuario`) REFERENCES `usuarios` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 #
 # Data for table "tipo_produtos"
 #
 
-INSERT INTO `tipo_produtos` VALUES (1,'MMORPG',1,'2023-01-19 21:37:17',3,'2023-01-19 21:42:28',1),(2,'Aventura',1,'2023-01-19 21:37:31',2,'2023-01-19 21:45:01',NULL),(3,'Esportes',1,'2023-01-19 21:37:37',2,NULL,NULL),(4,'Campanha',1,'2023-01-19 21:37:49',1,NULL,NULL);
+INSERT INTO `tipo_produtos` VALUES (1,'MMORPG',1,'2023-01-19 21:37:17',3,'2023-01-19 21:42:28',1),(2,'Aventura',1,'2023-01-19 21:37:31',2,'2023-01-19 21:45:01',NULL),(3,'Esportes',1,'2023-01-19 21:37:37',2,NULL,NULL),(4,'Campanha',1,'2023-01-19 21:37:49',1,NULL,NULL),(5,'Teste Editado',1,'2023-01-27 21:31:51',NULL,'2023-01-27 21:31:51',NULL),(6,'Teste Editado',1,'2023-01-27 21:32:08',NULL,'2023-01-27 21:32:08',NULL),(7,'Teste Editado',1,'2023-01-27 21:32:48',NULL,'2023-01-27 21:32:48',NULL),(8,'Teste Editado',1,'2023-01-27 21:32:56',NULL,'2023-01-27 21:32:56',NULL),(9,'Teste Editado',1,'2023-01-27 21:33:23',NULL,'2023-01-27 21:33:23',NULL);
 
 #
 # Structure for table "produtos"
@@ -101,13 +101,13 @@ CREATE TABLE `produtos` (
   KEY `id_tipo_produto` (`id_tipo_produto`),
   CONSTRAINT `produtos_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id`),
   CONSTRAINT `produtos_ibfk_2` FOREIGN KEY (`id_tipo_produto`) REFERENCES `tipo_produtos` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 #
 # Data for table "produtos"
 #
 
-INSERT INTO `produtos` VALUES (1,'God of War 5','Novo lançamento!','R$199,90',10,10,1,NULL,4,'2023-01-19 21:48:43',NULL,1),(2,'GTA 7 - Rio de Janeiro','ROCKSTAR GAMES BRASIL!','R$299,90',3,8,1,NULL,2,'2023-01-19 21:48:43',NULL,2),(3,'Warcraft III','Blizzard','R$169,90',7,4,1,NULL,1,'2023-01-19 21:48:43',NULL,3),(4,'FIFA 22','Teste','R$229,90',1,10,1,NULL,1,'2023-01-19 21:48:43',NULL,1),(5,'Elden Ring','Lançado em 2022, ganhador do premio XBOX','R$399,90',5,10,1,NULL,3,'2023-01-25 21:37:38',NULL,NULL),(6,'God of War - Ragnarok','Lançado em 2022, ganhador do premio XBOX','R$279,90',15,10,1,NULL,3,'2023-01-25 21:38:18',NULL,NULL);
+INSERT INTO `produtos` VALUES (1,'God of War 5','Novo lançamento!','R$199,90',10,10,1,NULL,4,'2023-01-19 21:48:43',NULL,1),(2,'GTA 7 - Rio de Janeiro','ROCKSTAR GAMES BRASIL!','R$299,90',3,8,1,NULL,2,'2023-01-19 21:48:43',NULL,2),(3,'GTA 7 - Rio de Janeiro','ROCKSTAR GAMES BRASIL!','R$699,90',10,6,1,NULL,2,'2023-01-19 21:48:43','2023-01-28 18:15:17',1),(5,'Elden Ring','Lançado em 2022, ganhador do premio XBOX','R$399,90',5,10,1,NULL,3,'2023-01-25 21:37:38',NULL,NULL),(6,'God of War - Ragnarok','Lançado em 2022, ganhador do premio XBOX','R$279,90',15,10,1,NULL,3,'2023-01-25 21:38:18',NULL,NULL),(12,'Teste Editado','Teste','1',1,1,1,NULL,NULL,'2023-01-27 21:31:51','2023-01-27 21:31:51',NULL),(13,'GTA 7 - Rio de Janeiro','ROCKSTAR GAMES BRASIL!','R$699,90',10,6,0,NULL,2,'2023-01-27 21:33:23','2023-01-28 18:44:50',2),(14,'God of War - Ragnarok','Lançado em 2022, ganhador do premio XBOX','R$279,90',15,10,1,'https://pt.wikipedia.org/wiki/Node.js#/media/Ficheiro:Node.js_logo.svg',3,'2023-01-28 18:18:11',NULL,3),(15,'God of War - Ragnarok','Lançado em 2022, ganhador do premio XBOX','R$279,90',15,10,1,'https://pt.wikipedia.org/wiki/Node.js#/media/Ficheiro:Node.js_logo.svg',3,'2023-01-28 18:18:21',NULL,3),(16,'God of War - Ragnarok','Lançado em 2022, ganhador do premio XBOX','R$279,90',1,10,1,'https://pt.wikipedia.org/wiki/Node.js#/media/Ficheiro:Node.js_logo.svg',3,'2023-01-28 18:19:46','2023-01-28 18:44:43',2);
 
 #
 # Structure for table "carrinhos"
@@ -125,7 +125,7 @@ CREATE TABLE `carrinhos` (
   UNIQUE KEY `id` (`id`),
   KEY `id_usuario` (`id_usuario`),
   CONSTRAINT `carrinhos_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 #
 # Data for table "carrinhos"
