@@ -1,7 +1,7 @@
 {
   "dev": {
     "username": "root",
-    "password": "your_root_password",
+    "password": "5064",
     "database": "db_first_store",
     "host": "127.0.0.1",
     "dialect": "mysql",
@@ -10,8 +10,8 @@
   },
   "teste": {
     "username": "root",
-    "password": "your_root_password",
-    "database": "your_test_database",
+    "password": "5064",
+    "database": "db_first_store",
     "host": "127.0.0.1",
     "dialect": "mysql",
     "dialectOptions": { "decimalNumbers": true },
