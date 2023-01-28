@@ -36,4 +36,11 @@ module.exports = Object.freeze({
   criadoComSucesso: 'criado com sucesso!',
   editadoComSucesso: 'editado com sucesso!',
   naoEncontrado: 'não encontrado!',
+
+  // Strings para `tipo_conta` relacionado aos usuários
+
+  ADMIN: 'ADMIN',
+  OPERADOR: 'OPERADOR',
+  FREE: 'FREE',
+  VIP: 'VIP',
 });

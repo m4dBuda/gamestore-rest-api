@@ -3,6 +3,7 @@ const helpers = require('../helpers/helpers');
 const strings = require('../helpers/strings');
 const Usuarios = require('../models/usuarios');
 const Produtos = require('../models/produtos');
+const TipoProdutos = require('../models/tipo_produtos');
 const config = require('../../config/config.json');
 
 async function resetarUsuarioTeste() {
@@ -39,7 +40,25 @@ async function resetarProdutoTeste() {
   return;
 }
 
+async function resetarTipoProdutoTeste() {
+  const sequelize = helpers.getSequelize(config.teste.database);
+  const tipoProduto = await TipoProdutos(sequelize, Sequelize.DataTypes).findOne({
+    where: {
+      descricao: strings.nomeTeste,
+    },
+  });
+  if (tipoProduto) {
+    await TipoProdutos(sequelize, Sequelize.DataTypes).destroy({
+      where: {
+        id: tipoProduto.id,
+      },
+    });
+  }
+  return;
+}
+
 module.exports = {
   resetarUsuarioTeste,
   resetarProdutoTeste,
+  resetarTipoProdutoTeste,
 };

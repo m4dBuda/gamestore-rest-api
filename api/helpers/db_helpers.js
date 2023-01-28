@@ -52,20 +52,6 @@ async function isCarrinhoFinalizado(req, forcar) {
   }
 }
 
-async function getUsuarioByIdObjeto(objeto, req) {
-  const sequelize = helpers.getSequelize(req.query.nomedb);
-
-  const usuario = await Usuarios(sequelize, Sequelize.DataTypes).findOne({
-    where: {
-      id: objeto.id_usuario,
-    },
-  });
-
-  objeto.dataValues.dados_usuario = usuario;
-
-  return objeto;
-}
-
 async function getProdutosCarrinho(carrinho, req) {
   const sequelize = helpers.getSequelize(req.query.nomedb);
   const dados_produto = [];
@@ -84,10 +70,28 @@ async function getProdutosCarrinho(carrinho, req) {
   return carrinho;
 }
 
+function updateEstado(item) {
+  let estado;
+  let novoEstado;
+
+  if (item.ativo == 0) {
+    estado = 1;
+    novoEstado = 'ativado';
+  }
+
+  if (item.ativo == 1) {
+    estado = 0;
+    novoEstado = 'inativado';
+  }
+
+  return { estado, novoEstado };
+}
+
 module.exports = {
   getUsuarioByCriadoPorLista,
-  getUsuarioByIdObjeto,
   getProdutosCarrinho,
 
   isCarrinhoFinalizado,
+
+  updateEstado,
 };
