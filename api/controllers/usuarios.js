@@ -7,7 +7,7 @@ const strings = require('../helpers/strings');
 // Função para verificar se o CPF já está cadastrado.
 async function verificarCpfRepetido(req) {
   const sequelize = helpers.getSequelize(req.query.nomedb);
-  const isCPFCadastrado = await Usuarios(sequelize, Sequelize.DataTypes).findOne({
+  const isCPFCadastrado = await Usuarios(sequelize).findOne({
     where: {
       cpf: req.body.cpf,
     },
@@ -22,7 +22,7 @@ async function verificarCpfRepetido(req) {
 // Função para verificar se o email já está cadastrado.
 async function verificarEmailRepetido(req) {
   const sequelize = helpers.getSequelize(req.query.nomedb);
-  const isEmailCadastrado = await Usuarios(sequelize, Sequelize.DataTypes).findOne({
+  const isEmailCadastrado = await Usuarios(sequelize).findOne({
     where: {
       email: req.body.email,
     },
@@ -43,11 +43,7 @@ module.exports = {
   async getAll(req, res) {
     const sequelize = helpers.getSequelize(req.query.nomedb);
     try {
-      const usuarios = await Usuarios(
-        sequelize,
-        Sequelize.DataTypes,
-        strings.VIEW_USUARIOS,
-      ).findAll();
+      const usuarios = await Usuarios(sequelize, strings.VIEW_USUARIOS).findAll();
 
       res.status(200).send(usuarios || { mensagem: `Usuário ${strings.naoEncontrado}` });
     } catch (error) {
@@ -65,13 +61,11 @@ module.exports = {
   async getById(req, res) {
     const sequelize = helpers.getSequelize(req.query.nomedb);
     try {
-      const usuario = await Usuarios(sequelize, Sequelize.DataTypes, strings.VIEW_USUARIOS).findOne(
-        {
-          where: {
-            id: req.params.id,
-          },
+      const usuario = await Usuarios(sequelize, strings.VIEW_USUARIOS).findOne({
+        where: {
+          id: req.params.id,
         },
-      );
+      });
 
       res.status(200).send(usuario || { mensagem: `Usuário ${strings.naoEncontrado}` });
     } catch (error) {
@@ -117,7 +111,7 @@ module.exports = {
       } else {
         const hash = await bcrypt.hash(req.body.senha, 12);
 
-        const usuario = await Usuarios(sequelize, Sequelize.DataTypes).create({
+        const usuario = await Usuarios(sequelize).create({
           nome: req.body.nome,
           cpf: req.body.cpf,
           senha: hash,
@@ -157,7 +151,7 @@ module.exports = {
   async update(req, res) {
     const sequelize = helpers.getSequelize(req.query.nomedb);
     try {
-      await Usuarios(sequelize, Sequelize.DataTypes).update(
+      await Usuarios(sequelize).update(
         {
           nome: req.body.nome,
           email: req.body.email,
@@ -189,7 +183,7 @@ module.exports = {
   async delete(req, res) {
     const sequelize = helpers.getSequelize(req.query.nomedb);
     try {
-      const usuario = await Usuarios(sequelize, Sequelize.DataTypes).findOne({
+      const usuario = await Usuarios(sequelize).findOne({
         where: { id: req.params.id },
       });
       if (usuario) {
@@ -204,7 +198,7 @@ module.exports = {
           novoEstado = 'inativado';
         }
 
-        await Usuarios(sequelize, Sequelize.DataTypes).update(
+        await Usuarios(sequelize).update(
           {
             ativo: estado,
             alterado_em: new Date(),

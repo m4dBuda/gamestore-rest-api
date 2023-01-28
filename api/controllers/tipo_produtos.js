@@ -17,16 +17,14 @@ module.exports = {
   async create(req, res) {
     const sequelize = helpers.getSequelize(req.query.nomedb);
     try {
-      const tipoProdutos = await TipoProdutos(sequelize, Sequelize.DataTypes).create({
+      const tipoProdutos = await TipoProdutos(sequelize).create({
         descricao: req.body.descricao,
       });
 
-      res
-        .status(200)
-        .send({
-          mensagem: `Tipo produto ${tipoProdutos.descricao} cadastrado com sucesso`,
-          id: tipoProdutos.id,
-        });
+      res.status(200).send({
+        mensagem: `Tipo produto ${tipoProdutos.descricao} cadastrado com sucesso`,
+        id: tipoProdutos.id,
+      });
     } catch (error) {
       res.status(500).send({ error });
     } finally {
@@ -41,7 +39,7 @@ module.exports = {
   async getAll(req, res) {
     const sequelize = helpers.getSequelize(req.query.nomedb);
     try {
-      const tipoProduto = await TipoProdutos(sequelize, Sequelize.DataTypes).findAll();
+      const tipoProduto = await TipoProdutos(sequelize).findAll();
 
       if (req.query.relacionar_usuario == true) {
         await dbHelpers.getUsuarioByCriadoPorLista(tipoProduto, req);
@@ -62,7 +60,7 @@ module.exports = {
     const sequelize = helpers.getSequelize(req.query.nomedb);
     try {
       const { id } = req.params;
-      const tipoProduto = await TipoProdutos(sequelize, Sequelize.DataTypes).findOne({
+      const tipoProduto = await TipoProdutos(sequelize).findOne({
         where: {
           id,
         },
@@ -84,7 +82,7 @@ module.exports = {
     try {
       const { id } = req.params;
 
-      await TipoProdutos(sequelize, Sequelize.DataTypes).update(
+      await TipoProdutos(sequelize).update(
         {
           descricao: req.body.descricao,
           alterado_por_id_usuario: req.body.alterado_por_id_usuario,
@@ -117,7 +115,7 @@ module.exports = {
     try {
       const { id } = req.params;
 
-      const tipoProduto = await TipoProdutos(sequelize, Sequelize.DataTypes).findOne({
+      const tipoProduto = await TipoProdutos(sequelize).findOne({
         where: { id },
       });
 
@@ -133,7 +131,7 @@ module.exports = {
           novoEstado = 'inativado';
         }
 
-        await TipoProdutos(sequelize, Sequelize.DataTypes).update(
+        await TipoProdutos(sequelize).update(
           {
             ativo: estado,
             alterado_em: new Date(),

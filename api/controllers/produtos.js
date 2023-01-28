@@ -51,11 +51,9 @@ module.exports = {
       const sequelizeInstance = helpers.getSequelize(query.nomedb);
 
       // Obtendo todos os produtos com base no filtro especificado
-      const products = await Produtos(
-        sequelizeInstance,
-        Sequelize.DataTypes,
-        strings.VIEW_PRODUTOS,
-      ).findAll(getFiltro(query));
+      const products = await Produtos(sequelizeInstance, strings.VIEW_PRODUTOS).findAll(
+        getFiltro(query),
+      );
       // Enviando a resposta com os produtos encontrados ou mensagem de erro
       return res.status(200).send(products || { message: `Produto não encontrado!` });
     } catch (error) {
@@ -76,11 +74,7 @@ module.exports = {
       const sequelizeInstance = helpers.getSequelize(query.nomedb);
 
       // Obtendo o produto com base no ID especificado
-      const product = await Produtos(
-        sequelizeInstance,
-        Sequelize.DataTypes,
-        strings.VIEW_PRODUTOS,
-      ).findOne({
+      const product = await Produtos(sequelizeInstance, strings.VIEW_PRODUTOS).findOne({
         where: {
           id: params.id,
         },
@@ -125,7 +119,7 @@ module.exports = {
           .send({ message: 'É necessário informar uma descrição para o produto criado' });
       }
 
-      const product = await Produtos(sequelizeInstance, Sequelize.DataTypes).create({
+      const product = await Produtos(sequelizeInstance).create({
         nome_produto: body.nome_produto,
         descricao_produto: body.descricao_produto,
         quantidade: body.quantidade,
@@ -168,11 +162,7 @@ module.exports = {
       const sequelizeInstance = helpers.getSequelize(query.nomedb);
 
       // Obtendo o produto com base no ID especificado
-      const product = await Produtos(
-        sequelizeInstance,
-        Sequelize.DataTypes,
-        strings.VIEW_PRODUTOS,
-      ).findOne({
+      const product = await Produtos(sequelizeInstance, strings.VIEW_PRODUTOS).findOne({
         where: {
           id: params.id,
         },
@@ -183,7 +173,7 @@ module.exports = {
       }
 
       // Atualizando o produto.
-      await Produtos(sequelizeInstance, Sequelize.DataTypes).update(
+      await Produtos(sequelizeInstance).update(
         {
           nome_produto: body.nome_produto,
           descricao_produto: body.descricao_produto,
@@ -219,11 +209,7 @@ module.exports = {
       const sequelizeInstance = helpers.getSequelize(query.nomedb);
 
       // Buscando o usuário para verificar se há permissão para realizar tal ação
-      const user = await Usuarios(
-        sequelizeInstance,
-        Sequelize.DataTypes,
-        strings.VIEW_USUARIOS,
-      ).findOne({
+      const user = await Usuarios(sequelizeInstance, strings.VIEW_USUARIOS).findOne({
         where: {
           id: body.id_usuario,
         },
@@ -236,11 +222,7 @@ module.exports = {
       }
 
       // Buscando o produto
-      const product = await Produtos(
-        sequelizeInstance,
-        Sequelize.DataTypes,
-        strings.VIEW_PRODUTOS,
-      ).findOne({
+      const product = await Produtos(sequelizeInstance, strings.VIEW_PRODUTOS).findOne({
         where: { id: params.id },
       });
 
@@ -254,7 +236,7 @@ module.exports = {
       }
 
       // Atualizando o estado do produto
-      await Produtos(sequelizeInstance, Sequelize.DataTypes).update(
+      await Produtos(sequelizeInstance).update(
         {
           ativo: novoEstadoProduto.estado,
           alterado_em: new Date(),

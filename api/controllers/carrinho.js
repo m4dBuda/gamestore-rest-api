@@ -1,7 +1,8 @@
-const { Sequelize, where } = require('sequelize');
+const { Sequelize } = require('sequelize');
 const Carrinho = require('../models/carrinho');
 const helpers = require('../helpers/helpers');
 const dbHelpers = require('../helpers/db_helpers');
+const strings = require('../helpers/strings');
 
 module.exports = {
   /*
@@ -24,7 +25,7 @@ module.exports = {
 
       const validarCarrinho = await dbHelpers.isCarrinhoFinalizado(req, forcar);
       if (validarCarrinho) {
-        const carrinho = await Carrinho(sequelize, Sequelize.DataTypes, 'carrinho').create({
+        const carrinho = await Carrinho(sequelize).create({
           id_produtos: req.body.id_produtos,
           id_usuario: req.body.id_usuario,
         });
@@ -50,7 +51,7 @@ module.exports = {
   async getAll(req, res) {
     const sequelize = helpers.getSequelize(req.query.nomedb);
     try {
-      const carrinhos = await Carrinho(sequelize, Sequelize.DataTypes, 'view_carrinhos').findAll();
+      const carrinhos = await Carrinho(sequelize, strings.VIEW_CARRINHOS).findAll();
 
       res.status(200).send(carrinhos || { error: `Não há carrinhos para visualizar.` });
     } catch (error) {
@@ -69,7 +70,7 @@ module.exports = {
     try {
       const { id } = req.params;
 
-      const carrinho = await Carrinho(sequelize, Sequelize.DataTypes, 'view_carrinhos').findOne({
+      const carrinho = await Carrinho(sequelize, strings.VIEW_CARRINHOS).findOne({
         where: {
           id_usuario: id,
           finalizado: 0,
@@ -99,7 +100,7 @@ module.exports = {
     try {
       const { id } = req.params;
 
-      const carrinho = await Carrinho(sequelize, Sequelize.DataTypes).update(
+      const carrinho = await Carrinho(sequelize).update(
         {
           id_produtos: req.body.id_produtos,
           finalizado: req.body.finalizado,
@@ -132,7 +133,7 @@ module.exports = {
     try {
       const { id } = req.params;
 
-      const carrinho = await Carrinho(sequelize, Sequelize.DataTypes).findOne({
+      const carrinho = await Carrinho(sequelize).findOne({
         where: { id },
       });
 
@@ -148,7 +149,7 @@ module.exports = {
           novoEstado = 'reativado';
         }
 
-        await Carrinho(sequelize, Sequelize.DataTypes).update(
+        await Carrinho(sequelize).update(
           {
             finalizado: estado,
             alterado_em: new Date(),

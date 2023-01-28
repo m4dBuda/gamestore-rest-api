@@ -1,7 +1,7 @@
-const { Model } = require('sequelize');
+const { Model, DataTypes } = require('sequelize');
 const strings = require('../helpers/strings');
 
-module.exports = (sequelize, DataTypes, nomeTable = 'usuarios') => {
+module.exports = (sequelize, nomeTable = 'usuarios') => {
   class Usuarios extends Model {}
 
   Usuarios.init(

@@ -40,7 +40,7 @@ module.exports = {
         return res.status(400).send({ error: 'A senha deve ter pelo menos 6 caracteres' });
       }
       // Buscar usuário no banco de dados
-      const usuarioLogin = await Usuarios(sequelizeInstance, Sequelize.DataTypes).findOne({
+      const usuarioLogin = await Usuarios(sequelizeInstance).findOne({
         where: {
           email: body.email,
           ativo: 1,
@@ -92,7 +92,7 @@ module.exports = {
       }
 
       // Buscar usuário no banco de dados
-      const usuario = await Usuarios(sequelizeInstance, Sequelize.DataTypes).findOne({
+      const usuario = await Usuarios(sequelizeInstance).findOne({
         where: {
           id: params.id,
           ativo: 1,
@@ -120,7 +120,7 @@ module.exports = {
       const hashNovaSenha = await bcrypt.hash(body.nova_senha, 12);
 
       // Alterando a senha do usuário.
-      await Usuarios(sequelizeInstance, Sequelize.DataTypes).update(
+      await Usuarios(sequelizeInstance).update(
         {
           senha: hashNovaSenha,
           alterado_em: new Date(),
