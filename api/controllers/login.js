@@ -23,7 +23,7 @@ module.exports = {
   login: async (req, res) => {
     try {
       // Desestruturar objeto de requisição
-      const { query, body } = req;
+      const { query, body, params } = req;
 
       // Obter instância do Sequelize
       const sequelizeInstance = helpers.getSequelize(query.nomedb);
@@ -37,8 +37,9 @@ module.exports = {
 
       // Validação da senha
       if (body.senha.length < 6) {
-        return res.status(400).send({ error: 'A senha deve ter pelo menos 6 caracteres' });
+        return res.status(400).send({ error: 'A senha deve ter no mínimo 6 caracteres.' });
       }
+
       // Buscar usuário no banco de dados
       const usuarioLogin = await Usuarios(sequelizeInstance).findOne({
         where: {
@@ -59,6 +60,7 @@ module.exports = {
       if (!senhasConferem) {
         return res.status(401).send({ error: 'Senha incorreta.' });
       }
+
       return res
         .status(200)
         .send({ message: `Login para ${usuarioLogin.email} realizado com sucesso!` });

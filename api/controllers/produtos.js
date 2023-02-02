@@ -5,6 +5,7 @@ const helpers = require('../helpers/helpers');
 const dbHelpers = require('../helpers/db_helpers');
 const strings = require('../helpers/strings');
 const validator = require('validator');
+const produtos = require('../models/produtos');
 
 // Função para receber filtros na Query e adicionar no WHERE CLAUSE do método	getAll e getById
 function getFiltro(query) {
@@ -39,7 +40,7 @@ function getFiltro(query) {
 
 module.exports = {
   /*
-  URL: http://localhost:13700/produtos
+  URL: http://localhost:13700/produtos?nomedb=db_first_store
   Método: GET
   */
   getAll: async (req, res) => {
@@ -47,7 +48,7 @@ module.exports = {
       // Desestruturando o objeto query na variável "query"
       const { query } = req;
 
-      // Obtendo a instância do Sequelize a partir do nome da base de dados
+      // Obtendo a instância do Sequelize a partir do nome do banco de dados
       const sequelizeInstance = helpers.getSequelize(query.nomedb);
 
       // Obtendo todos os produtos com base no filtro especificado
@@ -62,7 +63,7 @@ module.exports = {
   },
 
   /*
-  URL: http://localhost:13700/produtos/:id
+  URL: http://localhost:13700/produtos/:id?nomedb=db_first_store
   Método: GET
   */
   getById: async (req, res) => {
@@ -87,7 +88,7 @@ module.exports = {
   },
 
   /*
-  URL: http://localhost:13700/produtos
+  URL: http://localhost:13700/produtos?nomedb=db_first_store
   Método: POST
   Body:
       {
@@ -105,20 +106,22 @@ module.exports = {
     try {
       // Desestruturando o objeto query e body na variável "query" e "body" respectivamente
       const { query, body } = req;
+
       // Obtendo a instância do Sequelize a partir do nome da base de dados
       const sequelizeInstance = helpers.getSequelize(query.nomedb);
 
       // Validações de campos
-      if (!validator.isLength(body.nome_produto, { min: 1, max: 255 })) {
+      if (!validator.isLength(body.nome_produto, { min: 8, max: 40 })) {
         return res.status(400).send({ message: 'O nome do produto é inválido' });
       }
 
-      if (!validator.isLength(body.descricao_produto, { min: 1, max: 255 })) {
+      if (!validator.isLength(body.descricao_produto, { min: 10, max: 255 })) {
         return res
           .status(400)
           .send({ message: 'É necessário informar uma descrição para o produto criado' });
       }
 
+      // Criando o produto
       const product = await Produtos(sequelizeInstance).create({
         nome_produto: body.nome_produto,
         descricao_produto: body.descricao_produto,
@@ -138,7 +141,7 @@ module.exports = {
   },
 
   /*
-  URL: http://localhost:13700/produtos/:id
+  URL: http://localhost:13700/produtos/:id?nomedb=db_first_store
   Método: PUT
   
   Body esperado para editar um produto
@@ -197,7 +200,7 @@ module.exports = {
   },
 
   /*
-  URL: http://localhost:13700/produtos/:id
+  URL: http://localhost:13700/produtos/:id?nomedb=db_first_store
   Método: DELETE
   */
   delete: async (req, res) => {
@@ -215,6 +218,7 @@ module.exports = {
         },
       });
 
+      // Validando se o usuário tem permissão de ADMIN
       if (user.tipo_conta !== strings.ADMIN) {
         return res.status(400).send({
           error: `Apenas administradores e operadores com permissão pode ativar/inativar produtos`,

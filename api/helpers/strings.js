@@ -19,11 +19,16 @@ module.exports = Object.freeze({
 
   // Strings fixas direcionadas à testes
   nomeTeste: 'Teste',
+  nomeTesteProduto: 'Nome teste produto',
+  nomeTesteDescricaoProduto: 'Nome teste descricao produto',
   nomeTesteEditado: 'Teste Editado',
   cpfTeste: '999.999.999-99',
   telefoneTeste: '(99)9-9999-9999',
   emailTeste: 'teste@example.com',
   senhaTeste: '123456',
+  enderecoTeste: 'Rua T, Bloco T, Ap T',
+  idTipoADMIN: 3,
+  dataNascimentoTeste: '01/01/1990',
 
   // Nomes tabelas
 

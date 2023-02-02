@@ -8,13 +8,13 @@ const config = require('../../config/config.json');
 
 async function resetarUsuarioTeste() {
   const sequelize = helpers.getSequelize(config.teste.database);
-  const usuario = await Usuarios(sequelize, Sequelize.DataTypes).findOne({
+  const usuario = await Usuarios(sequelize).findOne({
     where: {
       cpf: strings.cpfTeste,
     },
   });
   if (usuario) {
-    await Usuarios(sequelize, Sequelize.DataTypes).destroy({
+    await Usuarios(sequelize).destroy({
       where: {
         id: usuario.id,
       },
@@ -22,16 +22,48 @@ async function resetarUsuarioTeste() {
   }
   return;
 }
+async function criarUsuarioTeste() {
+  const sequelize = helpers.getSequelize(config.teste.database);
+
+  const usuario = await Usuarios(sequelize).findOne({
+    where: {
+      cpf: strings.cpfTeste,
+    },
+  });
+
+  if (usuario) {
+    await Usuarios(sequelize).destroy({
+      where: {
+        id: usuario.id,
+      },
+    });
+  }
+
+  const usuarioTeste = await Usuarios(sequelize).create({
+    nome: strings.nomeTeste,
+    cpf: strings.cpfTeste,
+    senha: strings.senhaTeste,
+    email: strings.emailTeste,
+    data_nascimento: strings.dataNascimentoTeste,
+    id_tipo_usuario: strings.idTipoADMIN,
+    telefone: strings.telefoneTeste,
+    endereco: strings.enderecoTeste,
+    endereco2: strings.teste,
+  });
+
+  const idUsuario = usuarioTeste.id;
+  return idUsuario;
+}
 
 async function resetarProdutoTeste() {
   const sequelize = helpers.getSequelize(config.teste.database);
-  const produto = await Produtos(sequelize, Sequelize.DataTypes).findOne({
+  const produto = await Produtos(sequelize).findOne({
     where: {
-      descricao_produto: strings.nomeTeste,
+      descricao_produto: strings.nomeTesteDescricaoProduto,
     },
   });
   if (produto) {
-    await Produtos(sequelize, Sequelize.DataTypes).destroy({
+    await Produtos(sequelize).destroy({
       where: {
         id: produto.id,
       },
@@ -42,13 +74,13 @@ async function resetarProdutoTeste() {
 
 async function resetarTipoProdutoTeste() {
   const sequelize = helpers.getSequelize(config.teste.database);
-  const tipoProduto = await TipoProdutos(sequelize, Sequelize.DataTypes).findOne({
+  const tipoProduto = await TipoProdutos(sequelize).findOne({
     where: {
       descricao: strings.nomeTeste,
     },
   });
   if (tipoProduto) {
-    await TipoProdutos(sequelize, Sequelize.DataTypes).destroy({
+    await TipoProdutos(sequelize).destroy({
       where: {
         id: tipoProduto.id,
       },
@@ -58,6 +90,7 @@ async function resetarTipoProdutoTeste() {
 }
 
 module.exports = {
+  criarUsuarioTeste,
   resetarUsuarioTeste,
   resetarProdutoTeste,
   resetarTipoProdutoTeste,

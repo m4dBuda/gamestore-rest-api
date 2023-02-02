@@ -8,30 +8,41 @@ const testHelpers = require('../api/helpers/test_helpers');
 // O bodyProduto será usado para criar um produto, e depois usar o mesmo no fluxo de testes.
 // O método resetarProdutoTeste() serve para garantir que o produto teste que será criado
 // não seja duplicado e seja excluído após a finalização dos testes.
-
-beforeAll(async () => {
-  await testHelpers.resetarProdutoTeste();
-});
-
+let bodyProduto;
+let bodyEdicaoProduto;
+let bodyDeleteProduto;
+let idUsuario;
 let idProduto;
 let url;
 let data;
 
-const bodyProduto = {
-  nome_produto: strings.nomeTeste,
-  descricao_produto: strings.nomeTeste,
-  quantidade: 1,
-  preco: 1,
-  rating: 1,
-  caminho_imagem: strings.nomeTeste,
-};
+beforeAll(async () => {
+  idUsuario = await testHelpers.criarUsuarioTeste();
+
+  await testHelpers.resetarProdutoTeste();
+
+  bodyProduto = {
+    nome_produto: strings.nomeTesteProduto,
+    descricao_produto: strings.nomeTesteDescricaoProduto,
+    quantidade: 1,
+    preco: 1,
+    rating: 1,
+    caminho_imagem: strings.nomeTeste,
+  };
+
+  bodyEdicaoProduto = {
+    nome_produto: strings.nomeTesteEditado,
+  };
+
+  bodyDeleteProduto = {
+    id_usuario: idUsuario,
+  };
+});
 
 test(strings.mensagemTesteCreateUsuarios1, async () => {
   url = `/produtos?nomedb=${config.dev.database}`;
-
   data = await request(app).post(url).send(bodyProduto).expect(200);
   idProduto = JSON.parse(data.text).id;
-  console.log(`id_produto: ${idProduto}`);
 });
 
 test(strings.mensagemTesteGetProdutos1, async () => {
@@ -50,23 +61,21 @@ test(strings.mensagemTesteGetProdutos3, async () => {
 });
 
 test(strings.mensagemTestePutProdutos1, async () => {
-  let bodyEdicaoProduto = {
-    nome_produto: strings.nomeTesteEditado,
-  };
   url = `/produtos/${idProduto}?nomedb=${config.dev.database}`;
   data = await request(app).put(url).send(bodyEdicaoProduto).expect(200);
 });
 
 test(strings.mensagemTesteDeleteProdutos1, async () => {
   url = `/produtos/${idProduto}?nomedb=${config.dev.database}`;
-  data = await request(app).delete(url).expect(200);
+  data = await request(app).delete(url).send(bodyDeleteProduto).expect(200);
 });
 
 test(strings.mensagemTesteDeleteProdutos2, async () => {
   url = `/produtos/${idProduto}?nomedb=${config.dev.database}`;
-  data = await request(app).delete(url).expect(200);
+  data = await request(app).delete(url).send(bodyDeleteProduto).expect(200);
 });
 
 afterAll(async () => {
   await testHelpers.resetarProdutoTeste();
+  await testHelpers.resetarUsuarioTeste();
 });

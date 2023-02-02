@@ -9,78 +9,70 @@ const testHelpers = require('../api/helpers/test_helpers');
 // O método resetarUsuarioTeste() serve para garantir que o usuário teste que será criado
 // não exista.
 
-beforeAll(async () => {
-  await testHelpers.resetarUsuarioTeste();
-});
-
-let idUsuario;
 let url;
 let data;
+let idUsuario;
+let bodyUsuario;
+let bodyUsuarioEditado;
 
-let bodyUsuario = {
-  nome: strings.nomeTeste,
-  cpf: strings.cpfTeste,
-  senha: strings.senhaTeste,
-  email: strings.emailTeste,
-  data_nascimento: '01/01/1990',
-  id_tipo_usuario: 3,
-  telefone: strings.telefoneTeste,
-  endereco: 'Endereço teste, Rua Teste, Q. Teste, L. Teste',
-  endereco2: 'Condomínio teste',
-};
+beforeAll(async () => {
+  await testHelpers.resetarUsuarioTeste();
+
+  bodyUsuario = {
+    nome: strings.nomeTeste,
+    cpf: strings.cpfTeste,
+    senha: strings.senhaTeste,
+    email: strings.emailTeste,
+    data_nascimento: strings.dataNascimentoTeste,
+    id_tipo_usuario: strings.idTipoADMIN,
+    telefone: strings.telefoneTeste,
+    endereco: strings.enderecoTeste,
+  };
+
+  bodyUsuarioEditado = {
+    nome: strings.nomeTesteEditado,
+  };
+});
 
 test(strings.mensagemTesteCreateUsuarios1, async () => {
-  url = `/usuarios?nomedb=${config.dev.database}`;
-
+  url = `/usuarios?nomedb=${config.teste.database}`;
   data = await request(app).post(url).send(bodyUsuario).expect(200);
   idUsuario = JSON.parse(data.text).id;
-  console.log(`id_usuario: ${idUsuario}`);
 });
 
 test(strings.mensagemTesteCreateUsuarios2, async () => {
-  url = `/usuarios?nomedb=${config.dev.database}`;
-
+  url = `/usuarios?nomedb=${config.teste.database}`;
   data = await request(app).post(url).send(bodyUsuario).expect(401);
 });
 
 test(strings.mensagemTesteCreateUsuarios3, async () => {
   bodyUsuario.email = 'test2@example.com';
-  url = `/usuarios?nomedb=${config.dev.database}`;
-
+  url = `/usuarios?nomedb=${config.teste.database}`;
   data = await request(app).post(url).send(bodyUsuario).expect(401);
 });
 
 test(strings.mensagemTesteGetUsuarios1, async () => {
-  url = `/usuarios?nomedb=${config.dev.database}`;
-
+  url = `/usuarios?nomedb=${config.teste.database}`;
   data = await request(app).get(url).expect(200);
 });
 
 test(strings.mensagemTesteGetUsuarios2, async () => {
-  url = `/usuarios/${idUsuario}?nomedb=${config.dev.database}`;
-
+  url = `/usuarios/${idUsuario}?nomedb=${config.teste.database}`;
   data = await request(app).get(url).expect(200);
 });
 
 test(strings.mensagemTestePutUsuarios1, async () => {
-  let novoBodyUsuario = {
-    nome: strings.nomeTesteEditado,
-  };
-
-  url = `/usuarios/${idUsuario}?nomedb=${config.dev.database}`;
-
-  data = await request(app).put(url).send(novoBodyUsuario).expect(200);
+  url = `/usuarios/${idUsuario}?nomedb=${config.teste.database}`;
+  data = await request(app).put(url).send(bodyUsuarioEditado).expect(200);
 });
 
 test(strings.mensagemTesteDeleteUsuarios1, async () => {
   url = `/usuarios/${idUsuario}?nomedb=${config.dev.database}`;
-
   data = await request(app).delete(url).expect(200);
 });
 
 test(strings.mensagemTesteDeleteUsuarios2, async () => {
   url = `/usuarios/${idUsuario}?nomedb=${config.dev.database}`;
-
   data = await request(app).delete(url).expect(200);
 });
 

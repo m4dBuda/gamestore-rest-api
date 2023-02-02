@@ -149,29 +149,29 @@ module.exports = {
   
  */
   async update(req, res) {
-    const sequelize = helpers.getSequelize(req.query.nomedb);
     try {
+      const { params, body, query } = req;
+      const sequelize = helpers.getSequelize(query.nomedb);
+
       await Usuarios(sequelize).update(
         {
-          nome: req.body.nome,
-          email: req.body.email,
-          data_nascimento: req.body.data_nascimento,
-          id_tipo_usuario: req.body.id_tipo_usuario,
-          telefone: req.body.telefone,
-          endereco: req.body.endereco,
-          endereco2: req.body.endereco2,
+          nome: body.nome,
+          email: body.email,
+          data_nascimento: body.data_nascimento,
+          id_tipo_usuario: body.id_tipo_usuario,
+          telefone: body.telefone,
+          endereco: body.endereco,
+          endereco2: body.endereco2,
           alterado_em: new Date(),
         },
         {
-          where: { id: req.params.id },
+          where: { id: params.id },
         },
       );
 
       res.status(200).send({ mensagem: `Usuário ${strings.editadoComSucesso}` });
     } catch (error) {
       res.status(500).send({ error });
-    } finally {
-      sequelize.close();
     }
   },
 
