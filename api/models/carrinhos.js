@@ -1,9 +1,9 @@
 const { Model, DataTypes } = require('sequelize');
 
-module.exports = (sequelize, nomeTable = 'carrinho') => {
-  class Carrinho extends Model {}
+module.exports = (sequelize, nomeTable = 'carrinhos') => {
+  class Carrinhos extends Model {}
 
-  Carrinho.init(
+  Carrinhos.init(
     {
       id_produtos: DataTypes.STRING,
       id_usuario: DataTypes.INTEGER,
@@ -19,7 +19,7 @@ module.exports = (sequelize, nomeTable = 'carrinho') => {
   );
 
   if (nomeTable === 'view_carrinhos') {
-    Carrinho.init(
+    Carrinhos.init(
       {
         id_produtos: DataTypes.STRING,
         id_usuario: DataTypes.INTEGER,
@@ -35,5 +35,5 @@ module.exports = (sequelize, nomeTable = 'carrinho') => {
       },
     );
   }
-  return Carrinho;
+  return Carrinhos;
 };

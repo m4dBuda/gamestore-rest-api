@@ -1,12 +1,12 @@
 const { Sequelize } = require('sequelize');
-const Carrinho = require('../models/carrinho');
+const Carrinhos = require('../models/carrinhos');
 const helpers = require('../helpers/helpers');
 const dbHelpers = require('../helpers/db_helpers');
 const strings = require('../helpers/strings');
 
 module.exports = {
   /*
-  URL: http://localhost:13700/carrinho?nomedb=db_first_store
+  URL: http://localhost:13700/carrinhos?nomedb=db_first_store
   Método: POST
   
   {
@@ -25,14 +25,12 @@ module.exports = {
 
       const validarCarrinho = await dbHelpers.isCarrinhoFinalizado(req, forcar);
       if (validarCarrinho) {
-        const carrinho = await Carrinho(sequelize).create({
+        const carrinho = await Carrinhos(sequelize).create({
           id_produtos: req.body.id_produtos,
           id_usuario: req.body.id_usuario,
         });
 
-        res
-          .status(200)
-          .send({ mensagem: `Carrinho criado com sucesso!`, id: carrinho.id, carrinho });
+        res.status(200).send({ mensagem: `Carrinho criado com sucesso!`, id: carrinho.id });
       }
       if (!validarCarrinho) {
         res.status(200).send({ mensagem: `Já existe um carrinho ativo para este usuário!` });
@@ -45,13 +43,13 @@ module.exports = {
   },
 
   /*
-  URL: http://localhost:13700/carrinho?nomedb=db_first_store
+  URL: http://localhost:13700/carrinhos?nomedb=db_first_store
   Método: GET
  */
   async getAll(req, res) {
     const sequelize = helpers.getSequelize(req.query.nomedb);
     try {
-      const carrinhos = await Carrinho(sequelize, strings.VIEW_CARRINHOS).findAll();
+      const carrinhos = await Carrinhos(sequelize, strings.VIEW_CARRINHOS).findAll();
 
       res.status(200).send(carrinhos || { error: `Não há carrinhos para visualizar.` });
     } catch (error) {
@@ -62,7 +60,7 @@ module.exports = {
   },
 
   /*
-  URL: http://localhost:13700/carrinho/1?nomedb=db_first_store
+  URL: http://localhost:13700/carrinhos/1?nomedb=db_first_store
   Método: GET
  */
   async getById(req, res) {
@@ -70,7 +68,7 @@ module.exports = {
     try {
       const { id } = req.params;
 
-      const carrinho = await Carrinho(sequelize, strings.VIEW_CARRINHOS).findOne({
+      const carrinho = await Carrinhos(sequelize, strings.VIEW_CARRINHOS).findOne({
         where: {
           id_usuario: id,
           finalizado: 0,
@@ -88,7 +86,7 @@ module.exports = {
   },
 
   /*
-  URL: http://localhost:13700/carrinho/1?nomedb=db_first_store
+  URL: http://localhost:13700/carrinhos/1?nomedb=db_first_store
   Método: PUT
    {
           "id_produtos": "1, 2, 3",
@@ -100,7 +98,7 @@ module.exports = {
     try {
       const { id } = req.params;
 
-      const carrinho = await Carrinho(sequelize).update(
+      const carrinho = await Carrinhos(sequelize).update(
         {
           id_produtos: req.body.id_produtos,
           finalizado: req.body.finalizado,
@@ -125,7 +123,7 @@ module.exports = {
   },
 
   /*
-  URL: http://localhost:13700/carrinho/1?nomedb=db_first_store
+  URL: http://localhost:13700/carrinhos/1?nomedb=db_first_store
   Método: DELETE
   */
   async delete(req, res) {
@@ -133,7 +131,7 @@ module.exports = {
     try {
       const { id } = req.params;
 
-      const carrinho = await Carrinho(sequelize).findOne({
+      const carrinho = await Carrinhos(sequelize).findOne({
         where: { id },
       });
 
@@ -149,7 +147,7 @@ module.exports = {
           novoEstado = 'reativado';
         }
 
-        await Carrinho(sequelize).update(
+        await Carrinhos(sequelize).update(
           {
             finalizado: estado,
             alterado_em: new Date(),

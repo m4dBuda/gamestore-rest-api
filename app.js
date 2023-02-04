@@ -6,7 +6,7 @@ const produtosRoutes = require('./api/routes/produtos');
 const usuariosRoutes = require('./api/routes/usuarios');
 const loginRoutes = require('./api/routes/login');
 const tipoProdutoRoutes = require('./api/routes/tipo_produtos');
-const carrinhoRoutes = require('./api/routes/carrinho');
+const carrinhosRoutes = require('./api/routes/carrinhos');
 
 const app = express();
 app.use(express.json({ limit: '50mb' }));
@@ -15,7 +15,7 @@ app.use(morgan('dev'));
 const httpServer = http.createServer(app);
 
 // Comentar esta linha para realizar testes.
-httpServer.listen(13700);
+// httpServer.listen(13700);
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
@@ -40,7 +40,7 @@ app.use('/produtos', produtosRoutes);
 app.use('/usuarios', usuariosRoutes);
 app.use('/login', loginRoutes);
 app.use('/tipo_produtos', tipoProdutoRoutes);
-app.use('/carrinho', carrinhoRoutes);
+app.use('/carrinhos', carrinhosRoutes);
 
 app.use((req, res, next) => {
   const error = Error('Rota não encontrada.');

@@ -23,6 +23,9 @@ const getConfig = () => {
   return config;
 };
 
+// Função usada para conectar com o banco de dados
+// Parametros:
+//  @nomedb -> O nome do banco de dados.
 const getSequelize = (nomedb) => {
   return new Sequelize(nomedb, config.username, config.password, getConfig());
 };

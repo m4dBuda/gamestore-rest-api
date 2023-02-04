@@ -1,7 +1,8 @@
 const { Sequelize } = require('sequelize');
 const helpers = require('./helpers');
+const strings = require('./strings');
 const Usuarios = require('../models/usuarios');
-const Carrinho = require('../models/carrinho');
+const Carrinhos = require('../models/carrinhos');
 const Produtos = require('../models/produtos');
 
 async function getUsuarioByCriadoPorLista(lista, req) {
@@ -22,7 +23,7 @@ async function getUsuarioByCriadoPorLista(lista, req) {
 async function isCarrinhoFinalizado(req, forcar) {
   const sequelize = helpers.getSequelize(req.query.nomedb);
 
-  const carrinho = await Carrinho(sequelize, Sequelize.DataTypes).findOne({
+  const carrinho = await Carrinhos(sequelize).findOne({
     where: {
       id_usuario: req.body.id_usuario,
       finalizado: 0,
@@ -31,7 +32,7 @@ async function isCarrinhoFinalizado(req, forcar) {
 
   if (carrinho) {
     if (forcar == true) {
-      await Carrinho(sequelize, Sequelize.DataTypes).update(
+      await Carrinhos(sequelize).update(
         {
           finalizado: 1,
           alterado_em: new Date(),
@@ -57,7 +58,7 @@ async function getProdutosCarrinho(carrinho, req) {
   const dados_produto = [];
 
   for (let idProduto of carrinho.id_produtos) {
-    const produto = await Produtos(sequelize, Sequelize.DataTypes, 'view_produtos').findOne({
+    const produto = await Produtos(sequelize, strings.VIEW_PRODUTOS).findOne({
       where: {
         id: idProduto,
       },

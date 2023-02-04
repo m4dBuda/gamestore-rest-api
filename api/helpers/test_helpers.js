@@ -3,6 +3,7 @@ const helpers = require('../helpers/helpers');
 const strings = require('../helpers/strings');
 const Usuarios = require('../models/usuarios');
 const Produtos = require('../models/produtos');
+const Carrinhos = require('../models/carrinhos');
 const TipoProdutos = require('../models/tipo_produtos');
 const config = require('../../config/config.json');
 
@@ -89,9 +90,59 @@ async function resetarTipoProdutoTeste() {
   return;
 }
 
+async function resetarCarrinhoTeste(idCarrinho) {
+  const sequelize = helpers.getSequelize(config.teste.database);
+
+  const carrinho = await Carrinhos(sequelize).findOne({
+    where: {
+      id: idCarrinho,
+    },
+  });
+
+  if (carrinho) {
+    await Carrinhos(sequelize).destroy({
+      where: {
+        id: carrinho.id,
+      },
+    });
+  }
+  return;
+}
+
+async function criarProdutoTeste() {
+  const sequelize = helpers.getSequelize(config.teste.database);
+
+  const produtoTeste = await Produtos(sequelize).findOne({
+    where: {
+      nome_produto: strings.nomeTesteProduto,
+    },
+  });
+  if (produtoTeste) {
+    await Produtos(sequelize).findOne({
+      where: {
+        id: produtoTeste.id,
+      },
+    });
+  }
+  const novoProdutoTeste = await Produtos(sequelize).create({
+    nome_produto: strings.nomeTesteProduto,
+    descricao_produto: strings.nomeTesteDescricaoProduto,
+    quantidade: 1,
+    preco: 1,
+    rating: 1,
+    caminho_imagem: strings.nomeTeste,
+  });
+
+  return novoProdutoTeste.id;
+}
+
 module.exports = {
   criarUsuarioTeste,
+
+  criarProdutoTeste,
+
   resetarUsuarioTeste,
   resetarProdutoTeste,
   resetarTipoProdutoTeste,
+  resetarCarrinhoTeste,
 };
