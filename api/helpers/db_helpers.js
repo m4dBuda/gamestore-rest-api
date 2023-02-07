@@ -35,6 +35,7 @@ async function isCarrinhoFinalizado(req, forcar) {
       await Carrinhos(sequelize).update(
         {
           finalizado: 1,
+          ativo: 0,
           alterado_em: new Date(),
         },
         {

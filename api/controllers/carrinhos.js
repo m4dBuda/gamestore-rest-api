@@ -13,32 +13,35 @@ module.exports = {
     "id_usuario": 4,
     "id_produtos": "3, 3, 4, 6, 1"
   }
-
-    Parametros: forcar (true)
-      Irá desativar o último carrinho não finalizado do usuário
-      e criar um novo carrinho com o body enviado.
  */
-  async create(req, res) {
-    const sequelize = helpers.getSequelize(req.query.nomedb);
+  create: async (req, res) => {
     try {
-      const { forcar } = req.query;
+      // Desestruturação de objeto da requisição.
+      const { body, query } = req;
 
-      const validarCarrinho = await dbHelpers.isCarrinhoFinalizado(req, forcar);
+      // Obtendo a instância do banco de dados.
+      const sequelizeInstance = helpers.getSequelize(query.nomedb);
+
+      // Validando se o usuário já possui um carrinho não finalizado, ou se
+      // quer abandonar o carrinho antigo e criar um novo
+      // Parametros: {forcar} - Se true abandona o carrinho anterior e cria um novo.
+      const validarCarrinho = await dbHelpers.isCarrinhoFinalizado(req, query.forcar);
+
       if (validarCarrinho) {
-        const carrinho = await Carrinhos(sequelize).create({
-          id_produtos: req.body.id_produtos,
-          id_usuario: req.body.id_usuario,
+        // Se não existir carrinho ativo ou se forcar == true, cria um novo carrinho
+        // para o usuário.
+        const carrinho = await Carrinhos(sequelizeInstance).create({
+          id_produtos: body.id_produtos,
+          id_usuario: body.id_usuario,
         });
 
-        res.status(200).send({ mensagem: `Carrinho criado com sucesso!`, id: carrinho.id });
+        return res.status(200).send({ mensagem: `Carrinho criado com sucesso!`, id: carrinho.id });
       }
       if (!validarCarrinho) {
-        res.status(200).send({ mensagem: `Já existe um carrinho ativo para este usuário!` });
+        return res.status(200).send({ mensagem: `Já existe um carrinho ativo para este usuário!` });
       }
     } catch (error) {
-      res.status(500).send({ error });
-    } finally {
-      sequelize.close();
+      return res.status(500).send({ error });
     }
   },
 
@@ -46,16 +49,20 @@ module.exports = {
   URL: http://localhost:13700/carrinhos?nomedb=db_first_store
   Método: GET
  */
-  async getAll(req, res) {
-    const sequelize = helpers.getSequelize(req.query.nomedb);
+  getAll: async (req, res) => {
     try {
-      const carrinhos = await Carrinhos(sequelize, strings.VIEW_CARRINHOS).findAll();
+      // Desestruturação de objeto da requisição.
+      const { query } = req;
 
-      res.status(200).send(carrinhos || { error: `Não há carrinhos para visualizar.` });
+      // Obtendo a instância do banco de dados.
+      const sequelizeInstance = helpers.getSequelize(query.nomedb);
+
+      // Buscando todos os carrinhos do bancos de dados.
+      const carrinhos = await Carrinhos(sequelizeInstance, strings.VIEW_CARRINHOS).findAll();
+
+      return res.status(200).send(carrinhos || { error: `Não há carrinhos para visualizar.` });
     } catch (error) {
-      res.status(500).send({ error });
-    } finally {
-      sequelize.close();
+      return res.status(500).send({ error });
     }
   },
 
@@ -63,25 +70,29 @@ module.exports = {
   URL: http://localhost:13700/carrinhos/1?nomedb=db_first_store
   Método: GET
  */
-  async getById(req, res) {
-    const sequelize = helpers.getSequelize(req.query.nomedb);
+  getById: async (req, res) => {
     try {
-      const { id } = req.params;
+      // Desestruturação de objeto da requisição.
+      const { params, query } = req;
 
-      const carrinho = await Carrinhos(sequelize, strings.VIEW_CARRINHOS).findOne({
+      // Obtendo a instância do banco de dados.
+      const sequelizeInstance = helpers.getSequelize(query.nomedb);
+
+      // Buscando o carrinho do id recebido no bancos de dados.
+      const carrinho = await Carrinhos(sequelizeInstance, strings.VIEW_CARRINHOS).findOne({
         where: {
-          id_usuario: id,
-          finalizado: 0,
+          id_usuario: params.id,
+          ativo: 0,
         },
       });
 
+      // Busca os produtos dentro do carrinho pelo `id_produto
+      // e adiciona ao objeto da response.
       await dbHelpers.getProdutosCarrinho(carrinho, req);
 
-      res.status(200).send(carrinho || { error: `Carrinho não encontrado` });
+      return res.status(200).send(carrinho || { error: `Carrinho não encontrado` });
     } catch (error) {
-      res.status(500).send({ error });
-    } finally {
-      sequelize.close();
+      return res.status(500).send({ error });
     }
   },
 
@@ -93,32 +104,35 @@ module.exports = {
           "finalizado": 1
     }
   */
-  async update(req, res) {
-    const sequelize = helpers.getSequelize(req.query.nomedb);
+  update: async (req, res) => {
     try {
-      const { id } = req.params;
+      // Desestruturação de objeto da requisição.
+      const { body, query, params } = req;
 
-      const carrinho = await Carrinhos(sequelize).update(
+      // Obtendo a instância do banco de dados.
+      const sequelizeInstance = helpers.getSequelize(query.nomedb);
+
+      // Alterando o carrinho do id recebido no bancos de dados.
+      await Carrinhos(sequelizeInstance).update(
         {
-          id_produtos: req.body.id_produtos,
-          finalizado: req.body.finalizado,
+          id_produtos: body.id_produtos,
+          finalizado: body.finalizado,
           alterado_em: new Date(),
         },
         {
           where: {
-            id,
+            id: params.id,
           },
         },
       );
-      res.status(200).send(
+
+      return res.status(200).send(
         { mensagem: `Carrinho atualizado com sucesso!` } || {
           mensagem: `Carrinho não encontrado`,
         },
       );
     } catch (error) {
-      res.status(500).send({ error });
-    } finally {
-      sequelize.close();
+      return res.status(500).send({ error });
     }
   },
 
@@ -126,46 +140,44 @@ module.exports = {
   URL: http://localhost:13700/carrinhos/1?nomedb=db_first_store
   Método: DELETE
   */
-  async delete(req, res) {
-    const sequelize = helpers.getSequelize(req.query.nomedb);
+  delete: async (req, res) => {
     try {
-      const { id } = req.params;
+      // Desestruturação de objeto da requisição.
+      const { params, query } = req;
 
-      const carrinho = await Carrinhos(sequelize).findOne({
-        where: { id },
+      // Obtendo a instância do banco de dados.
+      const sequelizeInstance = helpers.getSequelize(query.nomedb);
+
+      // Buscando o carrinho do id recebido no bancos de dados.
+      const carrinho = await Carrinhos(sequelizeInstance).findOne({
+        where: { id: params.id },
       });
 
       if (carrinho) {
-        let estado;
-        let novoEstado;
-        if (carrinho.ativo == 0) {
-          estado = 1;
-          novoEstado = 'finalizado';
-        }
-        if (carrinho.ativo == 1) {
-          estado = 0;
-          novoEstado = 'reativado';
-        }
+        // Função que faz a verificação de estado do objeto encontrado.
+        // Se 1 então 0, Se 0 então 1.
+        const novoEstadoCarrinho = dbHelpers.updateEstado(carrinho);
 
-        await Carrinhos(sequelize).update(
+        await Carrinhos(sequelizeInstance).update(
           {
-            finalizado: estado,
+            ativo: novoEstadoCarrinho.estado,
             alterado_em: new Date(),
           },
           {
             where: {
-              id,
+              id: params.id,
             },
           },
         );
-        res.status(200).send({ mensagem: `Carrinho ${novoEstado} com sucesso!` });
+
+        return res
+          .status(200)
+          .send({ mensagem: `Carrinho ${novoEstadoCarrinho.novoEstado} com sucesso!` });
       } else {
-        res.status(404).send({ mensagem: `Carrinho não encontrado!` });
+        return res.status(404).send({ mensagem: `Carrinho não encontrado!` });
       }
     } catch (error) {
-      res.status(500).send({ error });
-    } finally {
-      sequelize.close();
+      return res.status(500).send({ error });
     }
   },
 };
