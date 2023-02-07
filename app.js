@@ -15,7 +15,7 @@ app.use(morgan('dev'));
 const httpServer = http.createServer(app);
 
 // Comentar esta linha para realizar testes.
-// httpServer.listen(13700);
+httpServer.listen(13700);
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
