@@ -25,9 +25,13 @@ module.exports = {
       // Validando se o usuário já possui um carrinho não finalizado, ou se
       // quer abandonar o carrinho antigo e criar um novo
       // Parametros: {forcar} - Se true abandona o carrinho anterior e cria um novo.
-      const validarCarrinho = await dbHelpers.isCarrinhoFinalizado(req, query.forcar);
+      const carrinhoFinalizado = await dbHelpers.isCarrinhoFinalizado(req, query.forcar);
 
-      if (validarCarrinho) {
+      if (!carrinhoFinalizado) {
+        return res.status(200).send({ mensagem: `Já existe um carrinho ativo para este usuário!` });
+      }
+
+      if (carrinhoFinalizado) {
         // Se não existir carrinho ativo ou se forcar == true, cria um novo carrinho
         // para o usuário.
         const carrinho = await Carrinhos(sequelizeInstance).create({
@@ -36,9 +40,6 @@ module.exports = {
         });
 
         return res.status(200).send({ mensagem: `Carrinho criado com sucesso!`, id: carrinho.id });
-      }
-      if (!validarCarrinho) {
-        return res.status(200).send({ mensagem: `Já existe um carrinho ativo para este usuário!` });
       }
     } catch (error) {
       return res.status(500).send({ error });
@@ -82,7 +83,8 @@ module.exports = {
       const carrinho = await Carrinhos(sequelizeInstance, strings.VIEW_CARRINHOS).findOne({
         where: {
           id_usuario: params.id,
-          ativo: 0,
+          ativo: 1,
+          finalizado: 0,
         },
       });
 
@@ -153,6 +155,10 @@ module.exports = {
         where: { id: params.id },
       });
 
+      if (!carrinho) {
+        return res.status(404).send({ mensagem: `Carrinho não encontrado!` });
+      }
+
       if (carrinho) {
         // Função que faz a verificação de estado do objeto encontrado.
         // Se 1 então 0, Se 0 então 1.
@@ -173,8 +179,6 @@ module.exports = {
         return res
           .status(200)
           .send({ mensagem: `Carrinho ${novoEstadoCarrinho.novoEstado} com sucesso!` });
-      } else {
-        return res.status(404).send({ mensagem: `Carrinho não encontrado!` });
       }
     } catch (error) {
       return res.status(500).send({ error });
