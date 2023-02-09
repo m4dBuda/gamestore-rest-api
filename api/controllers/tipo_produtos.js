@@ -14,21 +14,25 @@ module.exports = {
   }
   */
 
-  async create(req, res) {
-    const sequelize = helpers.getSequelize(req.query.nomedb);
+  create: async (req, res) => {
     try {
-      const tipoProdutos = await TipoProdutos(sequelize).create({
-        descricao: req.body.descricao,
+      // Desestruturação de objeto da requisição.
+      const { query, body } = req;
+
+      // Abrindo conexão com banco de dados
+      const sequelizeInstance = helpers.getSequelize(query.nomedb);
+
+      // Criando produto.
+      const tipoProdutos = await TipoProdutos(sequelizeInstance).create({
+        descricao: body.descricao,
       });
 
-      res.status(200).send({
+      return res.status(200).send({
         mensagem: `Tipo produto ${tipoProdutos.descricao} cadastrado com sucesso`,
         id: tipoProdutos.id,
       });
     } catch (error) {
-      res.status(500).send({ error });
-    } finally {
-      sequelize.close();
+      return res.status(500).send({ error });
     }
   },
 
@@ -36,19 +40,27 @@ module.exports = {
   URL: http://localhost:13700/tipo_produtos?nomedb=db_first_store
   Método: GET
   */
-  async getAll(req, res) {
-    const sequelize = helpers.getSequelize(req.query.nomedb);
+  getAll: async (req, res) => {
     try {
-      const tipoProduto = await TipoProdutos(sequelize).findAll();
+      // Desestruturação de objeto da requisição.
+      const { query } = req;
 
-      if (req.query.relacionar_usuario == true) {
+      // Abrindo conexão com banco de dados.
+      const sequelizeInstance = helpers.getSequelize(query.nomedb);
+
+      // Buscando produtos
+      const tipoProduto = await TipoProdutos(sequelizeInstance).findAll();
+
+      // Adicionando o usuário que criou o produto no objeto de cada produto.
+      if (query.relacionar_usuario == true) {
         await dbHelpers.getUsuarioByCriadoPorLista(tipoProduto, req);
       }
-      res.status(200).send(tipoProduto || { error: `Tipo produto não encontrado ou não existe.` });
+
+      return res
+        .status(200)
+        .send(tipoProduto || { error: `Tipo produto não encontrado ou não existe.` });
     } catch (error) {
-      res.status(500).send({ error });
-    } finally {
-      sequelize.close();
+      return res.status(500).send({ error });
     }
   },
 
@@ -56,20 +68,26 @@ module.exports = {
   URL: http://localhost:13700/tipo_produtos/1?nomedb=db_first_store
   Método: GET
   */
-  async getById(req, res) {
-    const sequelize = helpers.getSequelize(req.query.nomedb);
+  getById: async (req, res) => {
     try {
-      const { id } = req.params;
-      const tipoProduto = await TipoProdutos(sequelize).findOne({
+      // Desestruturação de objeto da requisição.
+      const { params, query } = req;
+
+      // Abrindo conexaõ com banco de dados.
+      const sequelizeInstance = helpers.getSequelize(query.nomedb);
+
+      // Buscando por Tipo Produto.
+      const tipoProduto = await TipoProdutos(sequelizeInstance).findOne({
         where: {
-          id,
+          id: params.id,
         },
       });
-      res.status(200).send(tipoProduto || { error: `Tipo produto não encontrado ou não existe.` });
+
+      return res
+        .status(200)
+        .send(tipoProduto || { error: `Tipo produto não encontrado ou não existe.` });
     } catch (error) {
-      res.status(500).send({ error });
-    } finally {
-      sequelize.close();
+      return res.status(500).send({ error });
     }
   },
 
@@ -77,32 +95,35 @@ module.exports = {
   URL: http://localhost:13700/tipo_produtos/1?nomedb=db_first_store
   Método: PUT
   */
-  async update(req, res) {
-    const sequelize = helpers.getSequelize(req.query.nomedb);
+  update: async (req, res) => {
     try {
-      const { id } = req.params;
+      // Desestruturação de objeto da requisição.
+      const { query, params, body } = req;
 
-      await TipoProdutos(sequelize).update(
+      // Abrindo conexaõ com banco de dados.
+      const sequelizeInstance = helpers.getSequelize(query.nomedb);
+
+      // Atualizando produto.
+      await TipoProdutos(sequelizeInstance).update(
         {
-          descricao: req.body.descricao,
-          alterado_por_id_usuario: req.body.alterado_por_id_usuario,
+          descricao: body.descricao,
+          alterado_por_id_usuario: body.alterado_por_id_usuario,
           alterado_em: new Date(),
         },
         {
           where: {
-            id,
+            id: params.id,
           },
         },
       );
-      res.status(200).send(
+
+      return res.status(200).send(
         { mensagem: `Tipo Produto atualizado com sucesso` } || {
           mensagem: 'Tipo Produto não encontrado',
         },
       );
     } catch (error) {
-      res.status(500).send({ error });
-    } finally {
-      sequelize.close();
+      return res.status(500).send({ error });
     }
   },
 
@@ -110,43 +131,40 @@ module.exports = {
   URL: http://localhost:13700/tipo_produtos/1?nomedb=db_first_store
   Método: DELETE
   */
-  async delete(req, res) {
-    const sequelize = helpers.getSequelize(req.query.nomedb);
+  delete: async (req, res) => {
     try {
-      const { id } = req.params;
+      // Desestruturação de objeto da requisição.
+      const { query, params } = req;
 
-      const tipoProduto = await TipoProdutos(sequelize).findOne({
-        where: { id },
+      // Abrindo conexaõ com o banco de dados.
+      const sequelizeInstance = helpers.getSequelize(query.nomedb);
+
+      // Buscando pelo Tipo Produto a ativar/inativar.
+      const tipoProduto = await TipoProdutos(sequelizeInstance).findOne({
+        where: { id: params.id },
       });
 
-      if (tipoProduto) {
-        let estado;
-        let novoEstado;
-        if (tipoProduto.ativo == 0) {
-          estado = 1;
-          novoEstado = 'ativado';
-        }
-        if (tipoProduto.ativo == 1) {
-          estado = 0;
-          novoEstado = 'inativado';
-        }
-
-        await TipoProdutos(sequelize).update(
-          {
-            ativo: estado,
-            alterado_em: new Date(),
-          },
-          { where: { id } },
-        );
-
-        res.status(200).send({ mensagem: `Tipo produto ${novoEstado} com sucesso!` });
-      } else {
-        res.status(404).send({ mensagem: `Tipo Produto não encontrado!` });
+      if (!tipoProduto) {
+        return res.status(400).send({ error: 'Tipo produto não encontrado.' });
       }
+
+      if (tipoProduto) {
+        var novoEstadoTipoProduto = dbHelpers.updateEstado(tipoProduto);
+      }
+
+      await TipoProdutos(sequelizeInstance).update(
+        {
+          ativo: novoEstadoTipoProduto.estado,
+          alterado_em: new Date(),
+        },
+        { where: { id: tipoProduto.id } },
+      );
+
+      return res
+        .status(200)
+        .send({ mensagem: `Tipo produto ${novoEstadoTipoProduto.novoEstado} com sucesso!` });
     } catch (error) {
-      res.status(500).send({ error });
-    } finally {
-      sequelize.close();
+      return res.status(500).send({ error });
     }
   },
 };

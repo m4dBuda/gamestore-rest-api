@@ -7,6 +7,7 @@ const usuariosRoutes = require('./api/routes/usuarios');
 const loginRoutes = require('./api/routes/login');
 const tipoProdutoRoutes = require('./api/routes/tipo_produtos');
 const carrinhosRoutes = require('./api/routes/carrinhos');
+const buscarCepRoutes = require('./api/routes/buscar_cep');
 
 const app = express();
 app.use(express.json({ limit: '50mb' }));
@@ -41,6 +42,7 @@ app.use('/usuarios', usuariosRoutes);
 app.use('/login', loginRoutes);
 app.use('/tipo_produtos', tipoProdutoRoutes);
 app.use('/carrinhos', carrinhosRoutes);
+app.use('/buscar_cep', buscarCepRoutes);
 
 app.use((req, res, next) => {
   const error = Error('Rota não encontrada.');

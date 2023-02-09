@@ -149,6 +149,7 @@ module.exports = {
         telefone: body.telefone,
         endereco: body.endereco,
         endereco2: body.endereco2,
+        cep: body.cep,
       });
 
       return res
@@ -194,6 +195,7 @@ module.exports = {
           telefone: body.telefone,
           endereco: body.endereco,
           endereco2: body.endereco2,
+          cep: body.cep,
           alterado_em: new Date(),
         },
         {
