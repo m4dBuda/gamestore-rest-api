@@ -8,14 +8,15 @@ const TipoProdutos = require('../models/tipo_produtos');
 const config = require('../../config/config.json');
 
 async function resetarUsuarioTeste() {
-  const sequelize = helpers.getSequelize(config.teste.database);
-  const usuario = await Usuarios(sequelize).findOne({
+  const sequelizeInstance = helpers.getSequelize(config.teste.database);
+
+  const usuario = await Usuarios(sequelizeInstance).findOne({
     where: {
       cpf: strings.cpfTeste,
     },
   });
   if (usuario) {
-    await Usuarios(sequelize).destroy({
+    await Usuarios(sequelizeInstance).destroy({
       where: {
         id: usuario.id,
       },
@@ -24,23 +25,23 @@ async function resetarUsuarioTeste() {
   return;
 }
 async function criarUsuarioTeste() {
-  const sequelize = helpers.getSequelize(config.teste.database);
+  const sequelizeInstance = helpers.getSequelize(config.teste.database);
 
-  const usuario = await Usuarios(sequelize).findOne({
+  const usuario = await Usuarios(sequelizeInstance).findOne({
     where: {
       cpf: strings.cpfTeste,
     },
   });
 
   if (usuario) {
-    await Usuarios(sequelize).destroy({
+    await Usuarios(sequelizeInstance).destroy({
       where: {
         id: usuario.id,
       },
     });
   }
 
-  const usuarioTeste = await Usuarios(sequelize).create({
+  const usuarioTeste = await Usuarios(sequelizeInstance).create({
     nome: strings.nomeTeste,
     cpf: strings.cpfTeste,
     senha: strings.senhaTeste,
@@ -57,74 +58,81 @@ async function criarUsuarioTeste() {
 }
 
 async function resetarProdutoTeste() {
-  const sequelize = helpers.getSequelize(config.teste.database);
-  const produto = await Produtos(sequelize).findOne({
+  const sequelizeInstance = helpers.getSequelize(config.teste.database);
+
+  const produto = await Produtos(sequelizeInstance).findOne({
     where: {
       descricao_produto: strings.nomeTesteDescricaoProduto,
     },
   });
+
   if (produto) {
-    await Produtos(sequelize).destroy({
+    await Produtos(sequelizeInstance).destroy({
       where: {
         id: produto.id,
       },
     });
   }
+
   return;
 }
 
 async function resetarTipoProdutoTeste() {
-  const sequelize = helpers.getSequelize(config.teste.database);
-  const tipoProduto = await TipoProdutos(sequelize).findOne({
+  const sequelizeInstance = helpers.getSequelize(config.teste.database);
+
+  const tipoProduto = await TipoProdutos(sequelizeInstance).findOne({
     where: {
       descricao: strings.nomeTeste,
     },
   });
+
   if (tipoProduto) {
-    await TipoProdutos(sequelize).destroy({
+    await TipoProdutos(sequelizeInstance).destroy({
       where: {
         id: tipoProduto.id,
       },
     });
   }
+
   return;
 }
 
 async function resetarCarrinhoTeste(idCarrinho) {
-  const sequelize = helpers.getSequelize(config.teste.database);
+  const sequelizeInstance = helpers.getSequelize(config.teste.database);
 
-  const carrinho = await Carrinhos(sequelize).findOne({
+  const carrinho = await Carrinhos(sequelizeInstance).findOne({
     where: {
       id: idCarrinho,
     },
   });
 
   if (carrinho) {
-    await Carrinhos(sequelize).destroy({
+    await Carrinhos(sequelizeInstance).destroy({
       where: {
         id: carrinho.id,
       },
     });
   }
+
   return;
 }
 
 async function criarProdutoTeste() {
-  const sequelize = helpers.getSequelize(config.teste.database);
+  const sequelizeInstance = helpers.getSequelize(config.teste.database);
 
-  const produtoTeste = await Produtos(sequelize).findOne({
+  const produtoTeste = await Produtos(sequelizeInstance).findOne({
     where: {
       nome_produto: strings.nomeTesteProduto,
     },
   });
   if (produtoTeste) {
-    await Produtos(sequelize).findOne({
+    await Produtos(sequelizeInstance).findOne({
       where: {
         id: produtoTeste.id,
       },
     });
   }
-  const novoProdutoTeste = await Produtos(sequelize).create({
+  const novoProdutoTeste = await Produtos(sequelizeInstance).create({
     nome_produto: strings.nomeTesteProduto,
     descricao_produto: strings.nomeTesteDescricaoProduto,
     quantidade: 1,

@@ -6,12 +6,18 @@ const Carrinhos = require('../models/carrinhos');
 const Produtos = require('../models/produtos');
 
 async function getUsuarioByCriadoPorLista(lista, req) {
-  const sequelize = helpers.getSequelize(req.query.nomedb);
+  // Desestruturação de objeto da requisição.
+  const { query } = req;
 
+  // Abrindo conexão com o banco de dados.
+  const sequelizeInstance = helpers.getSequelize(query.nomedb);
+
+  // Loop para adicionar em cada objeto da lista recebida
+  // os dados do usuário que o criou.
   for (const item of lista) {
-    const usuario = await Usuarios(sequelize, Sequelize.DataTypes).findOne({
+    const usuario = await Usuarios(sequelizeInstance).findOne({
       where: {
-        id: item.id_usuario,
+        id: item.criado_por_id_usuario,
       },
     });
 

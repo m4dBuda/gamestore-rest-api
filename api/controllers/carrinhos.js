@@ -28,7 +28,7 @@ module.exports = {
       const carrinhoFinalizado = await dbHelpers.isCarrinhoFinalizado(req, query.forcar);
 
       if (!carrinhoFinalizado) {
-        return res.status(200).send({ mensagem: `Já existe um carrinho ativo para este usuário!` });
+        return res.status(400).send({ error: `Já existe um carrinho ativo para este usuário!` });
       }
 
       if (carrinhoFinalizado) {
