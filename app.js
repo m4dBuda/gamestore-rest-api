@@ -29,7 +29,7 @@ app.use((req, res, next) => {
 });
 
 app.use((req, res, next) => {
-  if (req.query.nomedb === undefined) {
+  if (!req.query.nomedb) {
     const error = Error('Banco de dados não encontrado.');
     error.status = 400;
     return res.status(error.status).send({ error: error.message });
@@ -47,6 +47,7 @@ app.use('/buscar_cep', buscarCepRoutes);
 app.use((req, res, next) => {
   const error = Error('Rota não encontrada.');
   error.status = 404;
+  return res.status(error.status).send({ error: error.message });
   next(error);
 });
 

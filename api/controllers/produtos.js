@@ -5,7 +5,6 @@ const helpers = require('../helpers/helpers');
 const dbHelpers = require('../helpers/db_helpers');
 const strings = require('../helpers/strings');
 const validator = require('validator');
-const produtos = require('../models/produtos');
 
 // Função para receber filtros na Query e adicionar no WHERE CLAUSE do método	getAll e getById
 function getFiltro(query) {
@@ -55,6 +54,7 @@ module.exports = {
       const products = await Produtos(sequelizeInstance, strings.VIEW_PRODUTOS).findAll(
         getFiltro(query),
       );
+
       // Enviando a resposta com os produtos encontrados ou mensagem de erro
       return res.status(200).send(products || { message: `Produto não encontrado!` });
     } catch (error) {
