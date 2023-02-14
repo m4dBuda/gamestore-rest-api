@@ -24,7 +24,7 @@ The time-date data is translated using `Moment`
 
 This API uses the following frameworks and libraries:
 
-`Express`, `Sequelize`, `Jest`, `Supertest`, `Bcrypt`, `Moment`, `Morgan`, `Mysql2`, `Nodemon`, `Http`, `Validator`.
+`Express`, `Sequelize`, `Jest`, `Supertest`, `Bcrypt`, `Moment`, `Morgan`, `Mysql2`, `Nodemon`, `Http`, `Validator`, `Axios`.
 
 The database was created using `MySQL`.
 
@@ -34,9 +34,9 @@ You can try installing with `npm install`, but if it doesn't work you can try ru
 This API was made for a Video-game Shop made in React.js, you can use it
 to manage users, logins and password change, and also to store products,
 put them into a cart, show the card with the products and related things.
-Theres also a table for user privileges in your application, that you can explore and develop.
+Theres also a table for user privileges in the application, that you can explore and use.
 
-The application database is on the `db_first_store` folder, you can import the .sql file from there!
+The application database is on the `db_first_store` folder, you can import the .sql file to your database and name it as you want, just remember to also update your config.json file.
 
 ## Support
 If you need any help or want to contribute feel free to throw me a message. =)
