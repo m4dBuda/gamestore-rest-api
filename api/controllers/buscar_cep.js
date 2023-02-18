@@ -6,13 +6,11 @@ const Usuarios = require('../models/usuarios');
 module.exports = {
   buscarCep: async (req, res) => {
     try {
-      // Desestruturação de objeto da requisição
       const { params, query } = req;
 
       let url = `https://cdn.apicep.com/file/apicep/${params.cep}.json?`;
 
       if (query.id_usuario) {
-        // Abrindo conexão com o banco de dados.
         const sequelizeInstance = helpers.getSequelize(query.nomedb);
 
         const usuario = await Usuarios(sequelizeInstance).findOne({

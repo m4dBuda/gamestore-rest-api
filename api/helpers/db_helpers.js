@@ -1,52 +1,14 @@
 const { Sequelize } = require('sequelize');
 const helpers = require('./helpers');
 const strings = require('./strings');
-const Usuarios = require('../models/usuarios');
 const Carrinhos = require('../models/carrinhos');
 const Produtos = require('../models/produtos');
 
-async function getUsuarioByCriadoPorLista(lista, req) {
-  // Desestruturação de objeto da requisição.
-  const { query } = req;
-
-  // Abrindo conexão com o banco de dados.
-  const sequelizeInstance = helpers.getSequelize(query.nomedb);
-
-  // Loop para adicionar em cada objeto da lista recebida
-  // os dados do usuário que o criou.
-  for (const item of lista) {
-    const usuario = await Usuarios(sequelizeInstance).findOne({
-      where: {
-        id: item.criado_por_id_usuario,
-      },
-    });
-
-    item.dataValues.dados_usuario = usuario;
-  }
-  return lista;
-}
-
-// Função para ajudar na validação e criação de carrinhos.
-//
-//
-// Caso um carrinho já exista e não tenha sido finalizado,
-// retorna false.
-//
-// Caso um carrinho já exista não finalizado e a requisição
-// Contenha `forcar = true` na query
-// retorna true.
-//
-// Caso nenhum carrinho não finalizado não seja encontrado
-// retorna true.
-
 async function isCarrinhoFinalizado(req, forcar) {
-  // Desestruturação de objeto da requisição.
   const { query, body } = req;
 
-  // Abrindo conexão com o banco de dados;
   const sequelize = helpers.getSequelize(query.nomedb);
 
-  // Buscando no banco de dados por um carrinho não finalizado do usuário recebido.
   const carrinho = await Carrinhos(sequelize).findOne({
     where: {
       id_usuario: body.id_usuario,
@@ -58,8 +20,6 @@ async function isCarrinhoFinalizado(req, forcar) {
     return true;
   }
 
-  // Se o carrinho for encontrado e `forcar = true` na query da requisição
-  // Inativa o último carrinho e força a criação de um novo.
   if (carrinho && forcar == true) {
     await Carrinhos(sequelize).update(
       {
@@ -78,48 +38,71 @@ async function isCarrinhoFinalizado(req, forcar) {
   return false;
 }
 
-// Busca os produtos dentro de um carrinho pelo id,
-// e adiciona o novo campo `dados_produtos` contendo
-// os produtos encontrados para cada id_produto dentro de um carrinho.
 async function getProdutosCarrinho(carrinho, req) {
-  // Abrindo conexão com o banco de dados.
   const sequelize = helpers.getSequelize(req.query.nomedb);
 
-  // Inicializando array de `dados_produtos` onde colocaremos
-  // cada produto encontrado, e que será inserido no objeto `carrinho`.
   const dados_produtos = [];
-
-  // Laço de repetição que retira da string `id_produtos` cada `id_produto`
-  // e busca o mesmo no banco de dados para inserir no array `dados_produtos`
+  let valorTotal = 0;
   for (let idProduto of carrinho.id_produtos) {
     const id = parseInt(idProduto);
 
-    // Se o idProduto for um número, continua a função, caso não,
-    // retorna e refaz o loop.
     if (isNaN(id)) {
       continue;
     }
 
-    // Buscando o produto.
     const produto = await Produtos(sequelize, strings.VIEW_PRODUTOS).findOne({
       where: {
         id: id,
       },
     });
 
-    // Se o produto for encontrado, é adicionado na lista/array `dados_produtos`
     if (produto) {
       dados_produtos.push(produto);
     }
+
+    const preco = parseFloat(produto.preco.replace('R$', '').replace(',', '.'));
+
+    valorTotal += preco;
   }
-  // Cria o novo campo `dados_produtos` dentro do objeto `carrinho`,
-  // e atribui a variável (array/lista) `dados_produtos`.
+
+  carrinho.dataValues.valor_total = valorTotal;
+
+  if (req.query.qnt_parcelas) {
+    await getCalculoParcelas(carrinho, req.query.qnt_parcelas);
+  }
   carrinho.dataValues.dados_produtos = dados_produtos;
+
   return carrinho;
 }
 
-// Função para verificar e atualizar o estado de qualquer `objeto`
-// encontrado no banco de dados que contenha o campo `ativo`.
+async function getCalculoParcelas(carrinho, qntParcelas) {
+  let jurosMensais = 0;
+
+  if (qntParcelas > 0 && qntParcelas <= 6) {
+    jurosMensais = 0.07;
+  }
+  if (qntParcelas > 6 && qntParcelas <= 12) {
+    jurosMensais = 0.1;
+  }
+  if (qntParcelas > 12 && qntParcelas <= 24) {
+    jurosMensais = 0.14;
+  }
+
+  const porcentagemJuros = jurosMensais * 100;
+  const valorParcela =
+    (carrinho.dataValues.valor_total * jurosMensais) /
+    (1 - Math.pow(1 + jurosMensais, -qntParcelas));
+
+  const valorFinal = valorParcela * qntParcelas;
+
+  carrinho.dataValues.valor_total = parseFloat(valorFinal).toFixed(2);
+  carrinho.dataValues.qnt_parcelas = qntParcelas;
+  carrinho.dataValues.porcentagem_juros = parseFloat(porcentagemJuros).toFixed(2);
+  carrinho.dataValues.valor_parcelas = parseFloat(valorParcela).toFixed(2);
+
+  return carrinho;
+}
+
 function updateEstado(item) {
   let estado;
   let novoEstado;
@@ -138,7 +121,6 @@ function updateEstado(item) {
 }
 
 module.exports = {
-  getUsuarioByCriadoPorLista,
   getProdutosCarrinho,
 
   isCarrinhoFinalizado,

@@ -1,4 +1,5 @@
 const { Model, DataTypes } = require('sequelize');
+const Usuarios = require('../models/usuarios');
 
 module.exports = (sequelize, nomeTable = 'tipo_produtos') => {
   class TipoProdutos extends Model {}
@@ -8,9 +9,8 @@ module.exports = (sequelize, nomeTable = 'tipo_produtos') => {
       descricao: DataTypes.STRING,
       ativo: DataTypes.BOOLEAN,
       criado_em: DataTypes.DATE,
-      criado_por_id_usuario: DataTypes.INTEGER,
       alterado_em: DataTypes.DATE,
-      alterado_por_id_usuario: DataTypes.INTEGER,
+      id_usuario: DataTypes.INTEGER,
     },
     {
       sequelize,
@@ -18,5 +18,8 @@ module.exports = (sequelize, nomeTable = 'tipo_produtos') => {
       timestamps: false,
     },
   );
+
+  TipoProdutos.belongsTo(Usuarios(sequelize), { foreignKey: 'id_usuario' });
+
   return TipoProdutos;
 };
