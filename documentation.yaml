@@ -1,0 +1,584 @@
+openapi: 3.0.0
+info:
+  title: "API First-Store"
+  version: "1.0.0"
+  description: "API First-Store, API usada para lecionar desenvolvimento Back-End na Academia do Desenvolvedor "
+  contact:
+    name: João Otávio Carvalho
+    email: otavioc.dev@gmail.com
+    url: https://example.com/
+servers:
+  - url: http://localhost:13700/
+tags:
+  - name: Produtos
+  - name: Tipo Produtos
+  - name: Carrinhos
+  - name: Usuarios
+  - name: Login
+  - name: Buscar Cep
+paths:
+  /produtos:
+    get:
+      operationId: getAllProdutos
+      description: Retorna uma lista de Produtos.
+      summary: Buscar produtos
+      tags: [ 'Produtos' ]
+      parameters:
+
+        - in: query
+          name: nome_produto
+          schema:
+            type: string
+          description: Filtro para buscar produtos pelo nome_produto 
+        - in: query
+          name: rating
+          schema:
+            type: integer
+          description: Filtro para buscar produtos pelo rating 
+        - in: query
+          name: ativo
+          schema:
+            type: boolean
+          description: Filtro para buscar produtos pelo estado 
+        - in: query
+          name: preco
+          schema:
+            type: string
+          description: Filtro para buscar produtos pelo preco 
+        - in: query
+          name: nomedb
+          schema:
+            type: string
+          description: Filtro para selecionar o banco de dados
+          required: true
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProdutosView'
+
+    post:
+      operationId: createProdutos
+      description: Cria um novo produto.
+      summary: Criar Produtos
+      tags: [ 'Produtos' ]
+      parameters:
+
+        - in: query
+          name: nomedb
+          schema:
+            type: string
+          description: Filtro para selecionar o banco de dados
+          required: true
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/Produto'  
+
+  /produtos/${id}:
+    get:
+      operationId: getByIdProduto
+      description: Busca um produto específico pelo ID recebido.
+      summary: Busca um produto pelo id
+      tags: [ 'Produtos' ]
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+            description: Filtro para selecionar o banco de dados
+          required: true
+
+        - in: query
+          name: nomedb
+          schema:
+            type: string
+          description: Filtro para selecionar o banco de dados
+          required: true
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: '#/components/schemas/ProdutosView'
+
+    put:
+      operationId: updateProduto
+      description: Atualiza um produto específico pelo ID recebido.
+      summary: Atualizar produto pelo id
+      tags: [ 'Produtos' ]
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+            description: Filtro para selecionar o banco de dados
+          required: true
+
+        - in: query
+          name: nomedb
+          schema:
+            type: string
+          description: Filtro para selecionar o banco de dados
+          required: true
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/Produto'           
+    delete:
+      operationId: deleteProduto
+      description: Inativa/Ativa um produto específico pelo ID recebido.
+      summary: Inativar/Ativar produto pelo id
+      tags: [ 'Produtos' ]
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+            description: Filtro para selecionar o banco de dados
+          required: true
+
+        - in: query
+          name: nomedb
+          schema:
+            type: string
+          description: Filtro para selecionar o banco de dados
+          required: true
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/Produto'           
+
+  /tipo_produtos:
+    get:
+      operationId: getAllCarrinhos
+      description: Retorna uma lista de Tipos de Produtos.
+      summary: Buscar tipos de produtos
+      tags: [ 'Tipo Produtos' ]
+      parameters:
+
+        - in: query
+          name: relacionar_usuario
+          schema:
+            type: boolean
+          description: Filtro para relacionar usuario e tipo produto
+        - in: query
+          name: nomedb
+          schema:
+            type: string
+          description: Filtro para selecionar o banco de dados
+          required: true
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TipoProdutos'
+
+    post:
+      operationId: createCarrinhos
+      description: Cria um novo tipo de produto.
+      summary: Criar Tipos de Produtos
+      tags: [ 'Tipo Produtos' ]
+      parameters:
+
+        - in: query
+          name: nomedb
+          schema:
+            type: string
+          description: Filtro para selecionar o banco de dados
+          required: true
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/TipoProdutos'
+
+  /tipo_produtos/${id}:
+    get:
+      operationId: getByIdTipoProduto
+      description: Busca um tipo produto específico pelo ID recebido.
+      summary: Busca um tipo produto pelo id
+      tags: [ 'Tipo Produtos' ]
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+            description: Filtro para selecionar o banco de dados
+          required: true
+
+        - in: query
+          name: nomedb
+          schema:
+            type: string
+          description: Filtro para selecionar o banco de dados
+          required: true
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: '#/components/schemas/TipoProdutos'
+
+    put:
+      operationId: updateTipoProduto
+      description: Atualiza um tipo produto específico pelo ID recebido.
+      summary: Atualizar tipo produto pelo id
+      tags: [ 'Tipo Produtos' ]
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+            description: Filtro para selecionar o banco de dados
+          required: true
+
+        - in: query
+          name: nomedb
+          schema:
+            type: string
+          description: Filtro para selecionar o banco de dados
+          required: true
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/TipoProdutos'
+
+    delete:
+      operationId: deleteTipoProduto
+      description: Inativa/Ativa um tipo produto específico pelo ID recebido.
+      summary: Inativar/Ativar tipo produto pelo id
+      tags: [ 'Tipo Produtos' ]
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+            description: Filtro para selecionar o banco de dados
+          required: true
+
+        - in: query
+          name: nomedb
+          schema:
+            type: string
+          description: Filtro para selecionar o banco de dados
+          required: true
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/TipoProdutos'
+
+  /carrinhos:
+    get:
+      operationId: getAllCarrinhos
+      description: Retorna uma lista de carrinhos.
+      summary: Buscar carrinhos
+      tags: [ 'Carrinhos' ]
+      parameters:
+
+        - in: query
+          name: nomedb
+          schema:
+            type: string
+          description: Filtro para selecionar o banco de dados
+          required: true
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CarrinhosView'
+
+    post:
+      summary: Criar novo carrinho
+      description: Cria um novo carrinho.
+      operationId: createCarrinhos
+      tags: [ 'Carrinhos' ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CarrinhosCreate'
+      
+      parameters:
+
+        - in: query
+          name: nomedb
+          schema:
+            type: string
+          description: Filtro para selecionar o banco de dados
+          required: true
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/CarrinhosView'
+
+  /carrinhos/${id}:
+    get:
+      operationId: getByIdCarrinho
+      description: Busca um carrinho específico pelo ID recebido.
+      summary: Busca um carrinho pelo id
+      tags: [ 'Carrinhos' ]
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+            description: Filtro para selecionar o banco de dados
+          required: true
+
+        - in: query
+          name: nomedb
+          schema:
+            type: string
+          description: Filtro para selecionar o banco de dados
+          required: true
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: '#/components/schemas/CarrinhosComProdutos'
+
+    put:
+      operationId: updateCarrinhos
+      description: Atualiza um carrinho específico pelo ID recebido.
+      summary: Atualizar carrinho pelo id
+      tags: [ 'Carrinhos' ]
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+            description: Filtro para selecionar o banco de dados
+          required: true
+
+        - in: query
+          name: nomedb
+          schema:
+            type: string
+          description: Filtro para selecionar o banco de dados
+          required: true
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/CarrinhosView'           
+    delete:
+      operationId: deleteCarrinho
+      description: Inativa/Ativa um carrinho específico pelo ID recebido.
+      summary: Inativar/Ativar tipo produto pelo id
+      tags: [ 'Carrinhos' ]
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+            description: Filtro para selecionar o banco de dados
+          required: true
+
+        - in: query
+          name: nomedb
+          schema:
+            type: string
+          description: Filtro para selecionar o banco de dados
+          required: true
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/CarrinhosView' 
+
+components:
+  schemas:
+
+    ProdutosView:
+      type: object
+      properties:
+        nome_produto:
+          type: string
+        descricao_produto:
+          type: string
+        id_tipo_produto:
+          type: integer
+        descricao_tipo_produto:
+          type: string
+        preco:
+          type: string
+        rating:
+          type: integer
+        ativo:
+          type: boolean
+        quantidade:
+          type: integer
+        caminho_imagem:
+          type: string
+        criado_em:
+          type: string
+          format: date-time
+        alterado_em:
+          type: string
+          format: date-time
+        id_usuario:
+          type: integer
+        nome_usuario:
+          type: string                   
+
+    Produto:
+        type: object
+        properties:
+          nome_produto:
+            type: string
+          descricao_produto:
+           type: string
+          preco:
+            type: string
+          rating:
+            type: integer
+          ativo:
+            type: boolean
+          quantidade:
+            type: integer
+          caminho_imagem:
+            type: string
+          criado_em:
+            type: string
+            format: date-time
+          alterado_em:
+            type: string
+            format: date-time
+          id_usuario:
+            type: integer         
+
+    TipoProdutos:
+        type: object
+        properties:
+          descricao:
+           type: string
+          ativo:
+            type: boolean
+          criado_em:
+            type: string
+            format: date-time
+          alterado_em:
+            type: string
+            format: date-time
+          criado_por_id_usuario:
+            type: integer         
+          alterado_por_id_usuario:
+            type: integer           
+
+    CarrinhosView:
+        type: object
+        properties:
+          nome:
+           type: string
+          ativo:
+            type: boolean
+          finalizado:
+            type: boolean
+          id_usuario:
+            type: integer
+          id_produtos:
+            type: string           
+          criado_em:
+            type: string
+            format: date-time
+          alterado_em:
+            type: string
+            format: date-time
+    
+    CarrinhosCreate:
+        type: object
+        properties:
+          id_usuario:
+            type: integer
+          id_produtos:
+            type: string  
+            required:
+              - id_produtos
+              - id_usuario               
+
+    CarrinhosComProdutos:
+        type: object
+        properties:
+          nome:
+           type: string
+          ativo:
+            type: boolean
+          finalizado:
+            type: boolean
+          id_usuario:
+            type: integer
+          id_produtos:
+            type: string           
+          criado_em:
+            type: string
+            format: date-time
+          alterado_em:
+            type: string
+            format: date-time
+          dados_produtos:
+            $ref: '#/components/schemas/ProdutosView'
+              
+        

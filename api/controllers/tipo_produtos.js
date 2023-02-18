@@ -2,27 +2,15 @@ const { Sequelize } = require('sequelize');
 const helpers = require('../helpers/helpers');
 const dbHelpers = require('../helpers/db_helpers');
 const TipoProdutos = require('../models/tipo_produtos');
+const Usuarios = require('../models/usuarios');
 
 module.exports = {
-  /*
-  URL: http://localhost:13700/tipo_produtos?nomedb=db_first_store
-  Método: POST
-  Body esperado:  
-  
-  {
-    "descricao": "Campanha"
-  }
-  */
-
   create: async (req, res) => {
     try {
-      // Desestruturação de objeto da requisição.
       const { query, body } = req;
 
-      // Abrindo conexão com banco de dados
       const sequelizeInstance = helpers.getSequelize(query.nomedb);
 
-      // Criando produto.
       const tipoProdutos = await TipoProdutos(sequelizeInstance).create({
         descricao: body.descricao,
       });
@@ -36,25 +24,20 @@ module.exports = {
     }
   },
 
-  /*
-  URL: http://localhost:13700/tipo_produtos?nomedb=db_first_store
-  Método: GET
-  */
   getAll: async (req, res) => {
     try {
-      // Desestruturação de objeto da requisição.
       const { query } = req;
 
-      // Abrindo conexão com banco de dados.
       const sequelizeInstance = helpers.getSequelize(query.nomedb);
 
-      // Buscando produtos
-      const tipoProduto = await TipoProdutos(sequelizeInstance).findAll();
-
-      // Adicionando o usuário que criou o produto no objeto de cada produto.
-      if (query.relacionar_usuario == true) {
-        await dbHelpers.getUsuarioByCriadoPorLista(tipoProduto, req);
-      }
+      const tipoProduto = await TipoProdutos(sequelizeInstance).findAll({
+        include: [
+          {
+            model: Usuarios(sequelizeInstance),
+            required: true,
+          },
+        ],
+      });
 
       return res
         .status(200)
@@ -64,19 +47,12 @@ module.exports = {
     }
   },
 
-  /*
-  URL: http://localhost:13700/tipo_produtos/1?nomedb=db_first_store
-  Método: GET
-  */
   getById: async (req, res) => {
     try {
-      // Desestruturação de objeto da requisição.
       const { params, query } = req;
 
-      // Abrindo conexaõ com banco de dados.
       const sequelizeInstance = helpers.getSequelize(query.nomedb);
 
-      // Buscando por Tipo Produto.
       const tipoProduto = await TipoProdutos(sequelizeInstance).findOne({
         where: {
           id: params.id,
@@ -91,23 +67,16 @@ module.exports = {
     }
   },
 
-  /*
-  URL: http://localhost:13700/tipo_produtos/1?nomedb=db_first_store
-  Método: PUT
-  */
   update: async (req, res) => {
     try {
-      // Desestruturação de objeto da requisição.
       const { query, params, body } = req;
 
-      // Abrindo conexaõ com banco de dados.
       const sequelizeInstance = helpers.getSequelize(query.nomedb);
 
-      // Atualizando produto.
       await TipoProdutos(sequelizeInstance).update(
         {
           descricao: body.descricao,
-          alterado_por_id_usuario: body.alterado_por_id_usuario,
+          id_usuario: body.id_usuario,
           alterado_em: new Date(),
         },
         {
@@ -127,19 +96,12 @@ module.exports = {
     }
   },
 
-  /*
-  URL: http://localhost:13700/tipo_produtos/1?nomedb=db_first_store
-  Método: DELETE
-  */
   delete: async (req, res) => {
     try {
-      // Desestruturação de objeto da requisição.
       const { query, params } = req;
 
-      // Abrindo conexaõ com o banco de dados.
       const sequelizeInstance = helpers.getSequelize(query.nomedb);
 
-      // Buscando pelo Tipo Produto a ativar/inativar.
       const tipoProduto = await TipoProdutos(sequelizeInstance).findOne({
         where: { id: params.id },
       });
