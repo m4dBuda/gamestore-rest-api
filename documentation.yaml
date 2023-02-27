@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: "API First-Store"
   version: "1.0.0"
-  description: "API First-Store, API usada para lecionar desenvolvimento Back-End na Academia do Desenvolvedor "
+  description: "API First-Store, API usada para lecionar desenvolvimento Back-End"
   contact:
     name: João Otávio Carvalho
     email: otavioc.dev@gmail.com
