@@ -1,22 +1,21 @@
 const { Sequelize, Op } = require('sequelize');
+const validator = require('validator');
 const Produtos = require('../models/produtos');
 const Usuarios = require('../models/usuarios');
 const helpers = require('../helpers/helpers');
 const dbHelpers = require('../helpers/db_helpers');
 const strings = require('../helpers/strings');
-const validator = require('validator');
 
 function getFiltro(query) {
   const filtro = {
     where: {
       ativo: 1,
     },
+    limit: 20,
   };
 
   if (query.nome_produto) {
-    filtro.where['nome_produto'] = {
-      [Op.like]: `%${query.nome_produto}%`,
-    };
+    filtro.where['nome_produto'] = { [Op.like]: `%${query.nome_produto}%` };
   }
 
   if (query.rating) {
@@ -28,9 +27,7 @@ function getFiltro(query) {
   }
 
   if (query.preco) {
-    filtro.where['preco'] = {
-      [Op.eq]: query.preco,
-    };
+    filtro.where['preco'] = { [Op.eq]: query.preco };
   }
 
   return filtro;

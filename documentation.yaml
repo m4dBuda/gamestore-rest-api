@@ -63,9 +63,9 @@ paths:
                   $ref: '#/components/schemas/ProdutosView'
 
     post:
-      operationId: createProdutos
-      description: Cria um novo produto.
       summary: Criar Produtos
+      description: Cria um novo produto.
+      operationId: createProdutos
       tags: [ 'Produtos' ]
       parameters:
 
@@ -75,27 +75,34 @@ paths:
             type: string
           description: Filtro para selecionar o banco de dados
           required: true
-
+      
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProdutosInput'
+      
       responses:
-        '200':
-          description: OK
+        "201":
+          description: Produto criado
           content:
             application/json:
               schema:
-                  $ref: '#/components/schemas/Produto'  
+                $ref: '#/components/schemas/ResponseObject'  
 
   /produtos/${id}:
     get:
-      operationId: getByIdProduto
-      description: Busca um produto específico pelo ID recebido.
       summary: Busca um produto pelo id
+      description: Busca um produto específico pelo ID recebido.
+      operationId: getByIdProduto
       tags: [ 'Produtos' ]
       parameters:
         - in: path
           name: id
           schema:
             type: integer
-            description: Filtro para selecionar o banco de dados
+            description: Id do produto
           required: true
 
         - in: query
@@ -111,8 +118,6 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                items:
                   $ref: '#/components/schemas/ProdutosView'
 
     put:
@@ -125,7 +130,7 @@ paths:
           name: id
           schema:
             type: integer
-            description: Filtro para selecionar o banco de dados
+            description: Id do produto
           required: true
 
         - in: query
@@ -135,13 +140,21 @@ paths:
           description: Filtro para selecionar o banco de dados
           required: true
 
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProdutosInput'
+
       responses:
-        '200':
-          description: OK
+        "200":
+          description: Produto atualizado
           content:
             application/json:
               schema:
-                  $ref: '#/components/schemas/Produto'           
+                $ref: '#/components/schemas/ResponseObject' 
+
     delete:
       operationId: deleteProduto
       description: Inativa/Ativa um produto específico pelo ID recebido.
@@ -152,7 +165,7 @@ paths:
           name: id
           schema:
             type: integer
-            description: Filtro para selecionar o banco de dados
+            description: Id do produto
           required: true
 
         - in: query
@@ -163,26 +176,21 @@ paths:
           required: true
 
       responses:
-        '200':
-          description: OK
+        "200":
+          description: Produto inativado/ativado
           content:
             application/json:
               schema:
-                  $ref: '#/components/schemas/Produto'           
+                $ref: '#/components/schemas/ResponseObject'          
 
   /tipo_produtos:
     get:
-      operationId: getAllCarrinhos
+      operationId: getAllTipoProdutos
       description: Retorna uma lista de Tipos de Produtos.
-      summary: Buscar tipos de produtos
+      summary: Buscar Tipos de produtos
       tags: [ 'Tipo Produtos' ]
       parameters:
 
-        - in: query
-          name: relacionar_usuario
-          schema:
-            type: boolean
-          description: Filtro para relacionar usuario e tipo produto
         - in: query
           name: nomedb
           schema:
@@ -201,9 +209,9 @@ paths:
                   $ref: '#/components/schemas/TipoProdutos'
 
     post:
-      operationId: createCarrinhos
+      operationId: createTipoProduto
       description: Cria um novo tipo de produto.
-      summary: Criar Tipos de Produtos
+      summary: Criar Tipos de produtos
       tags: [ 'Tipo Produtos' ]
       parameters:
 
@@ -214,26 +222,33 @@ paths:
           description: Filtro para selecionar o banco de dados
           required: true
 
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TipoProdutos'
+
       responses:
-        '200':
-          description: OK
+        "201":
+          description: Tipo Produto criado
           content:
             application/json:
               schema:
-                  $ref: '#/components/schemas/TipoProdutos'
+                $ref: '#/components/schemas/ResponseObject'
 
   /tipo_produtos/${id}:
     get:
+      summary: Busca um Tipo produto pelo id
+      description: Busca um Tipo produto específico pelo ID recebido.
       operationId: getByIdTipoProduto
-      description: Busca um tipo produto específico pelo ID recebido.
-      summary: Busca um tipo produto pelo id
       tags: [ 'Tipo Produtos' ]
       parameters:
         - in: path
           name: id
           schema:
             type: integer
-            description: Filtro para selecionar o banco de dados
+            description: Id do tipo produto
           required: true
 
         - in: query
@@ -256,14 +271,14 @@ paths:
     put:
       operationId: updateTipoProduto
       description: Atualiza um tipo produto específico pelo ID recebido.
-      summary: Atualizar tipo produto pelo id
+      summary: Atualizar Tipo produto pelo id
       tags: [ 'Tipo Produtos' ]
       parameters:
         - in: path
           name: id
           schema:
             type: integer
-            description: Filtro para selecionar o banco de dados
+            description: Id do tipo produto a ser atualizado
           required: true
 
         - in: query
@@ -274,24 +289,24 @@ paths:
           required: true
 
       responses:
-        '200':
-          description: OK
+        "200":
+          description: Tipo Produto atualizado
           content:
             application/json:
               schema:
-                  $ref: '#/components/schemas/TipoProdutos'
+                $ref: '#/components/schemas/ResponseObject'
 
     delete:
-      operationId: deleteTipoProduto
+      summary: Inativar/Ativar Tipo produto pelo id
       description: Inativa/Ativa um tipo produto específico pelo ID recebido.
-      summary: Inativar/Ativar tipo produto pelo id
+      operationId: deleteTipoProduto
       tags: [ 'Tipo Produtos' ]
       parameters:
         - in: path
           name: id
           schema:
             type: integer
-            description: Filtro para selecionar o banco de dados
+            description: Id do tipo produto a ser inativado/ativado
           required: true
 
         - in: query
@@ -302,12 +317,12 @@ paths:
           required: true
 
       responses:
-        '200':
-          description: OK
+        "200":
+          description: Tipo produto ativado/inativado com sucesso
           content:
             application/json:
               schema:
-                  $ref: '#/components/schemas/TipoProdutos'
+                $ref: '#/components/schemas/ResponseObject'
 
   /carrinhos:
     get:
@@ -356,12 +371,12 @@ paths:
           required: true
 
       responses:
-        '200':
-          description: OK
+        "201":
+          description: Carrinho criado
           content:
             application/json:
               schema:
-                  $ref: '#/components/schemas/CarrinhosView'
+                $ref: '#/components/schemas/ResponseObject'
 
   /carrinhos/${id}:
     get:
@@ -374,7 +389,7 @@ paths:
           name: id
           schema:
             type: integer
-            description: Filtro para selecionar o banco de dados
+            description: Id do carrinho
           required: true
 
         - in: query
@@ -404,7 +419,7 @@ paths:
           name: id
           schema:
             type: integer
-            description: Filtro para selecionar o banco de dados
+            description: Id do carrinho
           required: true
 
         - in: query
@@ -414,24 +429,115 @@ paths:
           description: Filtro para selecionar o banco de dados
           required: true
 
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CarrinhosCreate'
+
       responses:
-        '200':
-          description: OK
+        "200":
+          description: Carrinho atualizado
           content:
             application/json:
               schema:
-                  $ref: '#/components/schemas/CarrinhosView'           
+                $ref: '#/components/schemas/ResponseObject'  
+
     delete:
       operationId: deleteCarrinho
       description: Inativa/Ativa um carrinho específico pelo ID recebido.
-      summary: Inativar/Ativar tipo produto pelo id
+      summary: Inativar/Ativar carrinho pelo id
       tags: [ 'Carrinhos' ]
       parameters:
         - in: path
           name: id
           schema:
             type: integer
-            description: Filtro para selecionar o banco de dados
+            description: Id do carrinho
+          required: true
+
+        - in: query
+          name: nomedb
+          schema:
+            type: string
+          description: Filtro para selecionar o banco de dados
+          required: true
+
+      responses:
+        "200":
+          description: Carrinho ativado/inativado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseObject' 
+
+  /usuarios:
+    get:
+      operationId: getAllUsuarios
+      description: Retorna uma lista de Usuarios.
+      summary: Buscar Usuarios
+      tags: [ 'Usuarios' ]
+      parameters:
+
+        - in: query
+          name: nomedb
+          schema:
+            type: string
+          description: Filtro para selecionar o banco de dados
+          required: true
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Usuarios'
+
+    post:
+      summary: Criar novo Usuario
+      description: Cria um novo Usuario.
+      operationId: createUsuarios
+      tags: [ 'Usuarios' ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Usuarios'
+      
+      parameters:
+
+        - in: query
+          name: nomedb
+          schema:
+            type: string
+          description: Filtro para selecionar o banco de dados
+          required: true
+
+      responses:
+        "201":
+          description: Usuario criado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseObject'
+
+  /usuarios/${id}:
+    get:
+      operationId: getByIdUsuario
+      description: Busca um Usuario específico pelo ID recebido.
+      summary: Busca um Usuario pelo id
+      tags: [ 'Usuarios' ]
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+            description: Id do Usuario
           required: true
 
         - in: query
@@ -447,7 +553,175 @@ paths:
           content:
             application/json:
               schema:
-                  $ref: '#/components/schemas/CarrinhosView' 
+                type: array
+                items:
+                  $ref: '#/components/schemas/Usuarios'
+
+    put:
+      operationId: updateUsuarios
+      description: Atualiza um Usuario específico pelo ID recebido.
+      summary: Atualizar Usuario pelo id
+      tags: [ 'Usuarios' ]
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+            description: Id do usuário
+          required: true
+
+        - in: query
+          name: nomedb
+          schema:
+            type: string
+          description: Filtro para selecionar o banco de dados
+          required: true
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Usuarios'
+
+      responses:
+        "200":
+          description: Usuario atualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseObject'  
+
+    delete:
+      operationId: deleteUsuario
+      description: Inativa/Ativa um Usuario específico pelo ID recebido.
+      summary: Inativar/Ativar usuário pelo id
+      tags: [ 'Usuarios' ]
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+            description: Id do Usuario
+          required: true
+
+        - in: query
+          name: nomedb
+          schema:
+            type: string
+          description: Filtro para selecionar o banco de dados
+          required: true
+
+      responses:
+        "200":
+          description: Usuario ativado/inativado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseObject' 
+
+  /login:
+
+    post:
+      summary: Realizar login
+      description: Realiza login
+      operationId: loginUsuario
+      tags: [ 'Login' ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login'
+      
+      parameters:
+        - in: query
+          name: nomedb
+          schema:
+            type: string
+          description: Filtro para selecionar o banco de dados
+          required: true
+
+      responses:
+        "200":
+          description: Login realizado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseObject'
+
+  /login/${id}:
+
+    put:
+      summary: Alterar senha
+      description: Altera a senha de um usuários.
+      operationId: alterarSenhaUsuario
+      tags: [ 'Login' ]
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+            description: Id do usuário
+          required: true
+
+        - in: query
+          name: nomedb
+          schema:
+            type: string
+          description: Filtro para selecionar o banco de dados
+          required: true
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlterarSenha'
+
+      responses:
+        "200":
+          description: Senha atualizada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseObject'
+
+  /buscar_cep/${cep}:
+    get:
+      operationId: BuscarCep
+      description: Busca um cep consumindo API externa.
+      summary: Busca o endereço de um CEP.
+      tags: [ 'Buscar Cep' ]
+      parameters:
+        - in: path
+          name: cep
+          schema:
+            type: string
+            description: O CEP à ser buscado
+          required: true
+
+        - in: query
+          name: id
+          schema:
+            type: integer
+
+        - in: query
+          name: nomedb
+          schema:
+            type: string
+          description: Filtro para selecionar o banco de dados
+          required: true
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CepResponse'  
 
 components:
   schemas:
@@ -508,7 +782,65 @@ components:
             type: string
             format: date-time
           id_usuario:
-            type: integer         
+            type: integer  
+
+    ProdutosInput:
+        type: object
+        properties:
+          nome_produto:
+            type: string
+          descricao_produto:
+           type: string
+          preco:
+            type: string
+          rating:
+            type: integer
+          ativo:
+            type: boolean
+          quantidade:
+            type: integer
+          caminho_imagem:
+            type: string
+          criado_em:
+            type: string
+            format: date-time
+          alterado_em:
+            type: string
+            format: date-time
+          id_usuario:
+            type: integer 
+
+    Usuarios:
+        type: object
+        properties:
+          nome:
+            type: string
+          cpf:
+           type: string
+          senha:
+            type: string
+          email:
+            type: string
+          data_nascimento:
+            type: string
+          telefone:
+            type: string
+          endereco:
+            type: string
+          endereco2:
+            type: string
+          cep:
+            type: string
+          id_tipo_usuario:
+            type: integer 
+          ativo:
+            type: boolean
+          criado_em:
+            type: string
+            format: date-time
+          alterado_em:
+            type: string
+            format: date-time
 
     TipoProdutos:
         type: object
@@ -580,5 +912,51 @@ components:
             format: date-time
           dados_produtos:
             $ref: '#/components/schemas/ProdutosView'
-              
-        
+
+    Login:
+        type: object
+        properties:
+          email:
+            type: string
+          senha:
+            type: string            
+
+    AlterarSenha:
+        type: object
+        properties:
+          senha:
+            type: string
+          senha_nova:
+            type: string  
+
+    ResponseObject:
+        type: object
+        properties:
+          message:
+            type: string
+
+    DeleteInput:
+        type: object
+        properties:
+          id_usuario:
+            type: integer
+
+    CepResponse:
+        type: object
+        properties:
+          code:
+            type: string            
+          state:
+            type: string
+          city:
+            type: string
+          district:
+            type: string
+          adress:
+            type: string
+          status:
+            type: integer
+          ok:
+            type: boolean
+          statusTet:
+            type: string                                                                                      

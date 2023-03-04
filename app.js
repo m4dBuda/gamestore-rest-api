@@ -14,19 +14,7 @@ app.use(express.json({ limit: '50mb' }));
 app.use(morgan('dev'));
 
 const httpServer = http.createServer(app);
-
-// Comentar esta linha para realizar testes.
 httpServer.listen(13700);
-
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-  if (req.method === 'OPTIONS') {
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-    return res.status(200).json({});
-  }
-  next();
-});
 
 app.use((req, res, next) => {
   if (!req.query.nomedb) {

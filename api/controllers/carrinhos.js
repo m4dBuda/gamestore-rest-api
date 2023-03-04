@@ -53,9 +53,7 @@ module.exports = {
 
       const carrinho = await Carrinhos(sequelizeInstance, strings.VIEW_CARRINHOS).findOne({
         where: {
-          id_usuario: params.id,
-          ativo: 1,
-          finalizado: 0,
+          id: params.id,
         },
       });
 

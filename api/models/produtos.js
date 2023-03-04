@@ -5,10 +5,7 @@ module.exports = (sequelize, nomeTable = 'produtos') => {
 
   Produtos.init(
     {
-      nome_produto: {
-        type: String,
-        allowNull: true,
-      },
+      nome_produto: DataTypes.STRING,
       descricao_produto: DataTypes.STRING,
       id_tipo_produto: DataTypes.INTEGER,
       preco: DataTypes.STRING,
