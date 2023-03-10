@@ -19,12 +19,12 @@ This API uses Clean Code Architecture, and it is defined as a restAPI that provi
 The data validation is done using `Validator` from NodeJS.
 The tests are done using `Jest` and `Supertest`
 The connection to the database and models are done using `Sequelize` and `Mysql2`
-The password cryptographies and checkings are done using `Bcrypt`
+The password cryptographies, checkings and permissions are done using `Bcrypt` and `JsonWebToken`
 The time-date data is translated using `Moment`
 
 This API uses the following frameworks and libraries:
 
-`Express`, `Sequelize`, `Jest`, `Supertest`, `Bcrypt`, `Moment`, `Morgan`, `Mysql2`, `Nodemon`, `Http`, `Validator`, `Axios`.
+`Express`, `Sequelize`, `Jest`, `Supertest`, `Bcrypt`, `Moment`, `Morgan`, `Mysql2`, `Nodemon`, `Http`, `Validator`, `Axios`, `JWT`.
 
 The database was created using `MySQL`.
 
@@ -42,7 +42,6 @@ The application database is on the `db_first_store` folder, you can import the .
 If you need any help or want to contribute feel free to throw me a message. =)
 
 ## Authors and acknowledgment
-
 João Otávio C. de Carvalho
 
 ## License
