@@ -1,5 +1,5 @@
 ﻿# Host: localhost  (Version 8.0.11)
-# Date: 2023-03-04 12:26:30
+# Date: 2023-03-10 20:52:49
 # Generator: MySQL-Front 6.1  (Build 1.26)
 
 
@@ -19,7 +19,7 @@ CREATE TABLE `tipo_usuario` (
 # Data for table "tipo_usuario"
 #
 
-INSERT INTO `tipo_usuario` VALUES (1,'FREE'),(2,'VIP'),(3,'ADMIN');
+INSERT INTO `tipo_usuario` VALUES (1,'FREE'),(2,'VIP'),(3,'ADMIN'),(4,'OPERADORES');
 
 #
 # Structure for table "usuarios"
@@ -39,6 +39,7 @@ CREATE TABLE `usuarios` (
   `cep` varchar(10) DEFAULT NULL,
   `id_tipo_usuario` int(2) DEFAULT '1',
   `ativo` tinyint(1) DEFAULT '1',
+  `usuario_logado` tinyint(1) DEFAULT '0',
   `criado_em` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `alterado_em` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -49,7 +50,7 @@ CREATE TABLE `usuarios` (
 # Data for table "usuarios"
 #
 
-INSERT INTO `usuarios` VALUES (1,'Julio','111.222.333-44','$2b$12$YS7scSb1Vyn5KPJfNcLaTO4tegbWGrRQ.i/aDEc8DrSwzSBZB9k06','juliocesar@gmail.com','05/12/1990','(62)9-9988-7060','Avenida T-63, Edíficio Agulhas Negras, Bloco 1, Apto 1604','Setor Bueno','47813-238',1,1,'2023-01-19 21:40:44','2023-02-08 21:37:32'),(2,'Leo','444.555.666-77','$2b$12$fvVpZva715Tqc7KvV0wfc.JlfC1asLQRJiG37suDRQlBfBQieBOcO','leonidio@gmail.com','05/12/1990','(62)9-8880-7060','Rua Barão de Mauá, Qd. 32, Lt. 68','Setor Aeroporto','60510-175',3,1,'2023-01-23 20:45:19',NULL),(3,'João Otávio','666.777.888-99','$2b$12$4LYPDT3mBmKYuP2A7pHKsuS8bYYl3E8CoumKRip6zInnSs1ruuGg2','otaviodev@gmail.com','05/12/1990','(62)9-8562-7060','Avenida Brasil, nº 100, Qd. 10, Lt. 20','Setor Macaranã','29164-784',3,1,'2023-01-23 20:45:40',NULL),(4,'Jean','999.888.333-44','$2b$12$kZwCKz3eyYxUXYKBiptMjuEiChVkeXVRL.BDsNWVudY2H4pL/aDQ2','jean@gmail.com','05/12/1990','(62)9-8520-7060','Avenida Manoel Monteiro, nº 1, Qd. 1, Lt. 1','Setor Central',NULL,2,1,'2023-01-25 20:12:46',NULL);
+INSERT INTO `usuarios` VALUES (1,'Julio','111.222.333-44','$2b$12$YS7scSb1Vyn5KPJfNcLaTO4tegbWGrRQ.i/aDEc8DrSwzSBZB9k06','juliocesar@gmail.com','05/12/1990','(62)9-9988-7060','Avenida T-63, Edíficio Agulhas Negras, Bloco 1, Apto 1604','Setor Bueno','47813-238',1,1,1,'2023-01-19 21:40:44','2023-02-08 21:37:32'),(2,'Leo','444.555.666-77','$2b$12$fvVpZva715Tqc7KvV0wfc.JlfC1asLQRJiG37suDRQlBfBQieBOcO','leonidio@gmail.com','05/12/1990','(62)9-8880-7060','Rua Barão de Mauá, Qd. 32, Lt. 68','Setor Aeroporto','60510-175',3,1,0,'2023-01-23 20:45:19',NULL),(3,'João Otávio','666.777.888-99','$2b$12$4LYPDT3mBmKYuP2A7pHKsuS8bYYl3E8CoumKRip6zInnSs1ruuGg2','otaviodev@gmail.com','05/12/1990','(62)9-8562-7060','Avenida Brasil, nº 100, Qd. 10, Lt. 20','Setor Macaranã','29164-784',3,1,0,'2023-01-23 20:45:40',NULL),(4,'Jean','999.888.333-44','$2b$12$kZwCKz3eyYxUXYKBiptMjuEiChVkeXVRL.BDsNWVudY2H4pL/aDQ2','jean@gmail.com','05/12/1990','(62)9-8520-7060','Avenida Manoel Monteiro, nº 1, Qd. 1, Lt. 1','Setor Central',NULL,2,1,0,'2023-01-25 20:12:46',NULL);
 
 #
 # Structure for table "tipo_produtos"
@@ -99,13 +100,13 @@ CREATE TABLE `produtos` (
   KEY `id_tipo_produto` (`id_tipo_produto`),
   CONSTRAINT `produtos_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id`),
   CONSTRAINT `produtos_ibfk_2` FOREIGN KEY (`id_tipo_produto`) REFERENCES `tipo_produtos` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 #
 # Data for table "produtos"
 #
 
-INSERT INTO `produtos` VALUES (1,'God of War 5','Novo lançamento!','R$179,90',3,10,1,'OneDrive/prod_image/prod_1.jpg',1,'2023-01-19 21:48:43',NULL,1),(2,'GTA 7 - Rio de Janeiro','ROCKSTAR GAMES BRASIL!','R$299,90',15,9,1,'OneDrive/prod_image/prod_2.jpg',3,'2023-01-19 21:48:43',NULL,2),(3,'Assassins Creed - Odyssey','Ubisoft','R$199,90',5,7,0,'OneDrive/prod_image/prod_3.jpg',3,'2023-01-19 21:48:43','2023-01-28 18:15:17',1),(4,'God of War - Ragnarok','Descrição Teste','R$279,90',1,8,1,'OneDrive/prod_image/prod_4.jpg',1,'2023-01-28 18:19:46','2023-01-28 18:44:43',2),(5,'Elden Ring','Lançado em 2022, ganhador do premio XBOX','R$399,90',4,9,1,'OneDrive/prod_image/prod_5.jpg',2,'2023-01-25 21:37:38',NULL,3),(6,'Dark Souls 3','','R$379,90',7,9,0,'OneDrive/prod_image/prod_6.jpg',4,'2023-01-25 21:38:18',NULL,2);
+INSERT INTO `produtos` VALUES (1,'God of War 5','Novo lançamento!','R$179,90',3,10,1,'OneDrive/prod_image/prod_1.jpg',1,'2023-01-19 21:48:43',NULL,1),(2,'GTA 7 - Rio de Janeiro','ROCKSTAR GAMES BRASIL!','R$299,90',15,9,1,'OneDrive/prod_image/prod_2.jpg',3,'2023-01-19 21:48:43',NULL,2),(3,'Assassins Creed - Odyssey','Ubisoft','R$199,90',5,7,1,'OneDrive/prod_image/prod_3.jpg',3,'2023-01-19 21:48:43','2023-03-10 20:34:33',2),(4,'God of War - Ragnarok','Descrição Teste','R$279,90',1,8,1,'OneDrive/prod_image/prod_4.jpg',1,'2023-01-28 18:19:46','2023-01-28 18:44:43',2),(5,'Elden Ring','Lançado em 2022, ganhador do premio XBOX','R$399,90',4,9,1,'OneDrive/prod_image/prod_5.jpg',2,'2023-01-25 21:37:38',NULL,3),(6,'Dark Souls 3','','R$379,90',7,9,0,'OneDrive/prod_image/prod_6.jpg',4,'2023-01-25 21:38:18',NULL,2),(7,'God of War - Ragnarok','Lançado em 2022, ganhador do premio XBOX','R$279,90',1,10,1,'https://pt.wikipedia.org/wiki/Node.js#/media/Ficheiro:Node.js_logo.svg',3,'2023-03-10 20:09:53',NULL,3);
 
 #
 # Structure for table "carrinhos"
