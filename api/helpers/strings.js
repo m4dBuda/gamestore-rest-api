@@ -60,4 +60,7 @@ module.exports = Object.freeze({
   OPERADOR: 'OPERADOR',
   FREE: 'FREE',
   VIP: 'VIP',
+
+  // JWT KEY
+  JWT_KEY: '$7#RRgUFT*9kdTEv5vL5tgEw%EW3JMGO',
 });

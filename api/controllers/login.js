@@ -1,18 +1,68 @@
 const { Sequelize } = require('sequelize');
 const bcrypt = require('bcrypt');
 
-const Usuarios = require('../models/usuarios');
+const jwt = require('jsonwebtoken');
+const strings = require('../helpers/strings');
 const helpers = require('../helpers/helpers');
 
-async function compararSenhas(senha, usuario) {
-  const boolean = await bcrypt.compare(senha, usuario.senha);
+const Usuarios = require('../models/usuarios');
+
+async function validarUsuarioLogin(query, res, senha, usuario) {
+  try {
+    const result = await bcrypt.compare(senha, usuario.senha);
+
+    if (result === false) {
+      return res.status(401).send({ error: 'Senha incorreta.' });
+    }
+
+    if (result === true) {
+      const token = jwt.sign(
+        {
+          login: usuario.login,
+        },
+        strings.JWT_KEY,
+        {
+          expiresIn: '2 days',
+        },
+      );
+
+      const sequelizeInstance = helpers.getSequelize(query.nomedb);
+
+      await Usuarios(sequelizeInstance).update(
+        {
+          usuario_logado: true,
+        },
+        {
+          where: {
+            id: usuario.id,
+          },
+        },
+      );
+
+      return res.status(200).send({
+        mensagem: 'Login realizado com sucesso',
+        usuario: {
+          id: usuario.id,
+          nome: usuario.nome,
+          email: usuario.email,
+          token,
+        },
+      });
+    }
+  } catch (error) {
+    return res.status(400).send({ error: error });
+  }
+}
+
+async function compararSenhas(senhaBody, usuario) {
+  const boolean = await bcrypt.compare(senhaBody, usuario.senha);
   return boolean;
 }
 
 module.exports = {
   login: async (req, res) => {
     try {
-      const { query, body, params } = req;
+      const { query, body } = req;
 
       const sequelizeInstance = helpers.getSequelize(query.nomedb);
 
@@ -39,14 +89,7 @@ module.exports = {
           .send({ error: 'Não há nenhuma conta cadastrada com o e-mail informado' });
       }
 
-      const senhasConferem = await compararSenhas(body.senha, usuarioLogin);
-      if (!senhasConferem) {
-        return res.status(401).send({ error: 'Senha incorreta.' });
-      }
-
-      return res
-        .status(200)
-        .send({ message: `Login para ${usuarioLogin.email} realizado com sucesso!` });
+      await validarUsuarioLogin(query, res, body.senha, usuarioLogin);
     } catch (error) {
       return res.status(500).send(error);
     }
@@ -101,6 +144,46 @@ module.exports = {
       return res.status(200).send({ message: `Senha alterada com sucesso!` });
     } catch (error) {
       return res.status(500).send({ error });
+    }
+  },
+
+  logoff: async (req, res) => {
+    try {
+      const { query, params } = req;
+
+      const sequelizeInstance = helpers.getSequelize(query.nomedb);
+
+      const usuario = await Usuarios(sequelizeInstance).findOne({
+        where: {
+          id: params.id,
+        },
+      });
+
+      if (!usuario) {
+        return res.status(400).send({ error: 'Usuário não encontrado' });
+      }
+
+      await Usuarios(sequelizeInstance).update(
+        {
+          usuario_logado: 0,
+        },
+        {
+          where: {
+            id: usuario.id,
+          },
+        },
+      );
+
+      return res.status(200).send({
+        mensagem: `Logoff realizado com sucesso!`,
+        usuario: {
+          id: usuario.id,
+          nome: usuario.nome,
+          email: usuario.email,
+        },
+      });
+    } catch (error) {
+      return res.status(500).send({ error: error });
     }
   },
 };

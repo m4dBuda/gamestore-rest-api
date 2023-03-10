@@ -17,6 +17,7 @@ module.exports = (sequelize, nomeTable = 'usuarios') => {
       cep: DataTypes.STRING,
       id_tipo_usuario: DataTypes.INTEGER,
       ativo: DataTypes.BOOLEAN,
+      usuario_logado: DataTypes.BOOLEAN,
       criado_em: DataTypes.DATE,
       alterado_em: DataTypes.DATE,
     },

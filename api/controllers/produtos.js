@@ -154,7 +154,7 @@ module.exports = {
 
       if (user.tipo_conta !== strings.ADMIN) {
         return res.status(400).send({
-          error: `Apenas administradores e operadores com permissão pode ativar/inativar produtos`,
+          error: `Apenas administradores com permissão pode ativar/inativar produtos`,
         });
       }
 

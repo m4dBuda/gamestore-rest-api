@@ -2,6 +2,8 @@ const express = require('express');
 const http = require('http');
 const morgan = require('morgan');
 
+const checkAuth = require('./api/middlewares/checkauth');
+
 const produtosRoutes = require('./api/routes/produtos');
 const usuariosRoutes = require('./api/routes/usuarios');
 const loginRoutes = require('./api/routes/login');
@@ -18,19 +20,19 @@ httpServer.listen(13700);
 
 app.use((req, res, next) => {
   if (!req.query.nomedb) {
-    const error = Error('Banco de dados não encontrado.');
+    const error = Error('É necessário informar o nome do banco de dados na requisição.');
     error.status = 400;
     return res.status(error.status).send({ error: error.message });
   }
   next();
 });
 
-app.use('/produtos', produtosRoutes);
-app.use('/usuarios', usuariosRoutes);
 app.use('/login', loginRoutes);
-app.use('/tipo_produtos', tipoProdutoRoutes);
-app.use('/carrinhos', carrinhosRoutes);
-app.use('/buscar_cep', buscarCepRoutes);
+app.use('/produtos', checkAuth, produtosRoutes);
+app.use('/usuarios', checkAuth, usuariosRoutes);
+app.use('/tipo_produtos', checkAuth, tipoProdutoRoutes);
+app.use('/carrinhos', checkAuth, carrinhosRoutes);
+app.use('/buscar_cep', checkAuth, buscarCepRoutes);
 
 app.use((req, res, next) => {
   const error = Error('Rota não encontrada.');

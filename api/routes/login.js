@@ -10,4 +10,8 @@ router.put('/:id', (req, res) => {
   loginController.alterarSenha(req, res);
 });
 
+router.delete('/:id', (req, res) => {
+  loginController.logoff(req, res);
+});
+
 module.exports = router;

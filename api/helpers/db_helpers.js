@@ -103,7 +103,7 @@ async function getCalculoParcelas(carrinho, qntParcelas) {
   return carrinho;
 }
 
-function updateEstado(item) {
+function updateEstado(item, res) {
   let estado;
   let novoEstado;
 
