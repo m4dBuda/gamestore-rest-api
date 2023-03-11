@@ -5,12 +5,12 @@ const helpers = require('../helpers/helpers');
 const dbHelpers = require('../helpers/db_helpers');
 const strings = require('../helpers/strings');
 
-async function verificarCpfRepetido(req) {
-  const sequelize = helpers.getSequelize(req.query.nomedb);
+async function verificarCpfRepetido(body) {
+  const sequelize = helpers.getSequelize();
 
   const isCPFCadastrado = await Usuarios(sequelize).findOne({
     where: {
-      cpf: req.body.cpf,
+      cpf: body.cpf,
     },
   });
 
@@ -21,12 +21,12 @@ async function verificarCpfRepetido(req) {
   }
 }
 
-async function verificarEmailRepetido(req) {
-  const sequelize = helpers.getSequelize(req.query.nomedb);
+async function verificarEmailRepetido(body) {
+  const sequelize = helpers.getSequelize();
 
   const isEmailCadastrado = await Usuarios(sequelize).findOne({
     where: {
-      email: req.body.email,
+      email: body.email,
     },
   });
 
@@ -42,7 +42,7 @@ module.exports = {
     try {
       const { query } = req;
 
-      const sequelizeInstance = helpers.getSequelize(query.nomedb);
+      const sequelizeInstance = helpers.getSequelize();
 
       const usuarios = await Usuarios(sequelizeInstance, strings.VIEW_USUARIOS).findAll();
 
@@ -56,7 +56,7 @@ module.exports = {
     try {
       const { query, params } = req;
 
-      const sequelizeInstance = helpers.getSequelize(query.nomedb);
+      const sequelizeInstance = helpers.getSequelize();
 
       const usuario = await Usuarios(sequelizeInstance, strings.VIEW_USUARIOS).findOne({
         where: {
@@ -72,18 +72,18 @@ module.exports = {
 
   create: async (req, res) => {
     try {
-      const { body, query } = req;
+      const { body } = req;
 
-      const sequelizeInstance = helpers.getSequelize(query.nomedb);
+      const sequelizeInstance = helpers.getSequelize();
 
-      const checkCpf = await verificarCpfRepetido(req);
+      const checkCpf = await verificarCpfRepetido(body);
       if (checkCpf) {
         return res
           .status(401)
           .send({ error: `Este cpf já está cadastrado e vinculado a uma conta.` });
       }
 
-      const checkEmail = await verificarEmailRepetido(req);
+      const checkEmail = await verificarEmailRepetido(body);
       if (checkEmail) {
         return res
           .status(401)
@@ -115,9 +115,9 @@ module.exports = {
 
   update: async (req, res) => {
     try {
-      const { params, body, query } = req;
+      const { params, body } = req;
 
-      const sequelizeInstance = helpers.getSequelize(query.nomedb);
+      const sequelizeInstance = helpers.getSequelize();
 
       await Usuarios(sequelizeInstance).update(
         {
@@ -144,9 +144,9 @@ module.exports = {
 
   delete: async (req, res) => {
     try {
-      const { query, params } = req;
+      const { params } = req;
 
-      const sequelizeInstance = helpers.getSequelize(query.nomedb);
+      const sequelizeInstance = helpers.getSequelize();
 
       const usuario = await Usuarios(sequelizeInstance).findOne({
         where: { id: params.id },

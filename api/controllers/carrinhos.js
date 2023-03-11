@@ -10,7 +10,7 @@ module.exports = {
     try {
       const { body, query } = req;
 
-      const sequelizeInstance = helpers.getSequelize(query.nomedb);
+      const sequelizeInstance = helpers.getSequelize();
 
       const carrinhoFinalizado = await dbHelpers.isCarrinhoFinalizado(req, query.forcar);
 
@@ -33,9 +33,7 @@ module.exports = {
 
   getAll: async (req, res) => {
     try {
-      const { query } = req;
-
-      const sequelizeInstance = helpers.getSequelize(query.nomedb);
+      const sequelizeInstance = helpers.getSequelize();
 
       const carrinhos = await Carrinhos(sequelizeInstance, strings.VIEW_CARRINHOS).findAll();
 
@@ -47,9 +45,9 @@ module.exports = {
 
   getById: async (req, res) => {
     try {
-      const { params, query } = req;
+      const { params } = req;
 
-      const sequelizeInstance = helpers.getSequelize(query.nomedb);
+      const sequelizeInstance = helpers.getSequelize();
 
       const carrinho = await Carrinhos(sequelizeInstance, strings.VIEW_CARRINHOS).findOne({
         where: {
@@ -67,9 +65,9 @@ module.exports = {
 
   update: async (req, res) => {
     try {
-      const { body, query, params } = req;
+      const { body, params } = req;
 
-      const sequelizeInstance = helpers.getSequelize(query.nomedb);
+      const sequelizeInstance = helpers.getSequelize();
 
       await Carrinhos(sequelizeInstance).update(
         {
@@ -96,9 +94,9 @@ module.exports = {
 
   delete: async (req, res) => {
     try {
-      const { params, query } = req;
+      const { params } = req;
 
-      const sequelizeInstance = helpers.getSequelize(query.nomedb);
+      const sequelizeInstance = helpers.getSequelize();
 
       const carrinho = await Carrinhos(sequelizeInstance).findOne({
         where: { id: params.id },

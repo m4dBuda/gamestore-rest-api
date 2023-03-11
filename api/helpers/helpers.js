@@ -1,33 +1,15 @@
 const { Sequelize } = require('sequelize');
-const env = 'dev';
-const config = require('../../config/config.json')[env];
+const config = require('../../config/config');
 const moment = require('moment');
 
-const getConfig = () => {
-  config.dialectOptions = {
-    decimalNumbers: true,
-    dateStrings: true,
-    typeCast(field, next) {
-      if (field.type === 'DATETIME') {
-        return field.string();
-      }
-      if (field.type === 'TIMESTAMP') {
-        const date = field.string();
-        return date === null ? '' : moment(date).format('DD/MM/YYYY HH:mm:ss');
-      }
-      return next();
-    },
-  };
-  config.timezone = '-03:00';
+const env = process.env.NODE_ENV || 'development';
+const dbConfig = config[env];
 
-  return config;
-};
-
-// Função usada para conectar com o banco de dados
-// Parametros:
-//  @nomedb -> O nome do banco de dados.
-const getSequelize = (nomedb) => {
-  return new Sequelize(nomedb, config.username, config.password, getConfig());
+const getSequelize = () => {
+  return new Sequelize(dbConfig.database, dbConfig.username, dbConfig.password, {
+    host: dbConfig.host,
+    dialect: dbConfig.dialect,
+  });
 };
 
 module.exports = {

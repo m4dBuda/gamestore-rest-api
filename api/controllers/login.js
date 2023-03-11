@@ -7,7 +7,7 @@ const helpers = require('../helpers/helpers');
 
 const Usuarios = require('../models/usuarios');
 
-async function validarUsuarioLogin(query, res, senha, usuario) {
+async function validarUsuarioLogin(res, senha, usuario) {
   try {
     const result = await bcrypt.compare(senha, usuario.senha);
 
@@ -26,7 +26,7 @@ async function validarUsuarioLogin(query, res, senha, usuario) {
         },
       );
 
-      const sequelizeInstance = helpers.getSequelize(query.nomedb);
+      const sequelizeInstance = helpers.getSequelize();
 
       await Usuarios(sequelizeInstance).update(
         {
@@ -89,7 +89,7 @@ module.exports = {
           .send({ error: 'Não há nenhuma conta cadastrada com o e-mail informado' });
       }
 
-      await validarUsuarioLogin(query, res, body.senha, usuarioLogin);
+      await validarUsuarioLogin(res, body.senha, usuarioLogin);
     } catch (error) {
       return res.status(500).send(error);
     }
@@ -97,9 +97,9 @@ module.exports = {
 
   alterarSenha: async (req, res) => {
     try {
-      const { query, body, params } = req;
+      const { body, params } = req;
 
-      const sequelizeInstance = helpers.getSequelize(query.nomedb);
+      const sequelizeInstance = helpers.getSequelize();
 
       if (body.nova_senha.length < 6) {
         return res.status(400).send({ error: 'A senha deve ter pelo menos 6 caracteres' });
@@ -149,9 +149,9 @@ module.exports = {
 
   logoff: async (req, res) => {
     try {
-      const { query, params } = req;
+      const { params } = req;
 
-      const sequelizeInstance = helpers.getSequelize(query.nomedb);
+      const sequelizeInstance = helpers.getSequelize();
 
       const usuario = await Usuarios(sequelizeInstance).findOne({
         where: {
