@@ -7,9 +7,9 @@ const Usuarios = require('../models/usuarios');
 module.exports = {
   create: async (req, res) => {
     try {
-      const { query, body } = req;
+      const { body } = req;
 
-      const sequelizeInstance = helpers.getSequelize(query.nomedb);
+      const sequelizeInstance = helpers.getSequelize();
 
       const tipoProdutos = await TipoProdutos(sequelizeInstance).create({
         descricao: body.descricao,
@@ -26,9 +26,7 @@ module.exports = {
 
   getAll: async (req, res) => {
     try {
-      const { query } = req;
-
-      const sequelizeInstance = helpers.getSequelize(query.nomedb);
+      const sequelizeInstance = helpers.getSequelize();
 
       const tipoProduto = await TipoProdutos(sequelizeInstance).findAll({
         include: [
@@ -49,9 +47,9 @@ module.exports = {
 
   getById: async (req, res) => {
     try {
-      const { params, query } = req;
+      const { params } = req;
 
-      const sequelizeInstance = helpers.getSequelize(query.nomedb);
+      const sequelizeInstance = helpers.getSequelize();
 
       const tipoProduto = await TipoProdutos(sequelizeInstance).findOne({
         where: {
@@ -69,9 +67,9 @@ module.exports = {
 
   update: async (req, res) => {
     try {
-      const { query, params, body } = req;
+      const { params, body } = req;
 
-      const sequelizeInstance = helpers.getSequelize(query.nomedb);
+      const sequelizeInstance = helpers.getSequelize();
 
       await TipoProdutos(sequelizeInstance).update(
         {
@@ -98,9 +96,9 @@ module.exports = {
 
   delete: async (req, res) => {
     try {
-      const { query, params } = req;
+      const { params } = req;
 
-      const sequelizeInstance = helpers.getSequelize(query.nomedb);
+      const sequelizeInstance = helpers.getSequelize();
 
       const tipoProduto = await TipoProdutos(sequelizeInstance).findOne({
         where: { id: params.id },

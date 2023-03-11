@@ -11,7 +11,7 @@ module.exports = {
       let url = `https://cdn.apicep.com/file/apicep/${params.cep}.json?`;
 
       if (query.id_usuario) {
-        const sequelizeInstance = helpers.getSequelize(query.nomedb);
+        const sequelizeInstance = helpers.getSequelize();
 
         const usuario = await Usuarios(sequelizeInstance).findOne({
           where: {

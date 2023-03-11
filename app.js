@@ -1,6 +1,9 @@
 const express = require('express');
 const http = require('http');
 const morgan = require('morgan');
+const { config } = require('dotenv');
+
+config();
 
 const checkAuth = require('./api/middlewares/checkauth');
 
@@ -17,15 +20,6 @@ app.use(morgan('dev'));
 
 const httpServer = http.createServer(app);
 httpServer.listen(13700);
-
-app.use((req, res, next) => {
-  if (!req.query.nomedb) {
-    const error = Error('É necessário informar o nome do banco de dados na requisição.');
-    error.status = 400;
-    return res.status(error.status).send({ error: error.message });
-  }
-  next();
-});
 
 app.use('/login', loginRoutes);
 app.use('/produtos', checkAuth, produtosRoutes);
