@@ -6,7 +6,7 @@ info:
   contact:
     name: João Otávio Carvalho
     email: otavioc.dev@gmail.com
-    url: https://example.com/
+    url: https://www.linkedin.com/in/jo%C3%A3o-ot%C3%A1vio-carvalho-164023151/
 servers:
   - url: http://localhost:13700/
 tags:
@@ -29,11 +29,16 @@ paths:
           name: nome_produto
           schema:
             type: string
+            pattern: "^[a-zA-Z0-9]+$" # adicionado padrão aqui
+            maxLength: 255            
           description: Filtro para buscar produtos pelo nome_produto 
         - in: query
           name: rating
           schema:
             type: integer
+            minimum: 0          
+            maximum: 9999     
+            format: int32                   
           description: Filtro para buscar produtos pelo rating 
         - in: query
           name: ativo
@@ -44,14 +49,10 @@ paths:
           name: preco
           schema:
             type: string
+            pattern: "^[a-zA-Z0-9]+$" # adicionado padrão aqui
+            maxLength: 255            
           description: Filtro para buscar produtos pelo preco 
-        - in: query
-          name: nomedb
-          schema:
-            type: string
-          description: Filtro para selecionar o banco de dados
-          required: true
-
+      
       responses:
         '200':
           description: OK
@@ -59,6 +60,7 @@ paths:
             application/json:
               schema:
                 type: array
+                maxItems: 100
                 items:
                   $ref: '#/components/schemas/ProdutosView'
 
@@ -67,15 +69,6 @@ paths:
       description: Cria um novo produto.
       operationId: createProdutos
       tags: [ 'Produtos' ]
-      parameters:
-
-        - in: query
-          name: nomedb
-          schema:
-            type: string
-          description: Filtro para selecionar o banco de dados
-          required: true
-      
       requestBody:
         required: true
         content:
@@ -102,14 +95,10 @@ paths:
           name: id
           schema:
             type: integer
+            minimum: 0          
+            maximum: 9999    
+            format: int32                    
             description: Id do produto
-          required: true
-
-        - in: query
-          name: nomedb
-          schema:
-            type: string
-          description: Filtro para selecionar o banco de dados
           required: true
 
       responses:
@@ -131,13 +120,9 @@ paths:
           schema:
             type: integer
             description: Id do produto
-          required: true
-
-        - in: query
-          name: nomedb
-          schema:
-            type: string
-          description: Filtro para selecionar o banco de dados
+            minimum: 0          
+            maximum: 9999          
+            format: int32              
           required: true
 
       requestBody:
@@ -160,19 +145,16 @@ paths:
       description: Inativa/Ativa um produto específico pelo ID recebido.
       summary: Inativar/Ativar produto pelo id
       tags: [ 'Produtos' ]
+    
       parameters:
         - in: path
           name: id
           schema:
             type: integer
             description: Id do produto
-          required: true
-
-        - in: query
-          name: nomedb
-          schema:
-            type: string
-          description: Filtro para selecionar o banco de dados
+            minimum: 0          
+            maximum: 9999   
+            format: int32                     
           required: true
 
       responses:
@@ -189,14 +171,6 @@ paths:
       description: Retorna uma lista de Tipos de Produtos.
       summary: Buscar Tipos de produtos
       tags: [ 'Tipo Produtos' ]
-      parameters:
-
-        - in: query
-          name: nomedb
-          schema:
-            type: string
-          description: Filtro para selecionar o banco de dados
-          required: true
 
       responses:
         '200':
@@ -205,6 +179,7 @@ paths:
             application/json:
               schema:
                 type: array
+                maxItems: 100
                 items:
                   $ref: '#/components/schemas/TipoProdutos'
 
@@ -213,15 +188,6 @@ paths:
       description: Cria um novo tipo de produto.
       summary: Criar Tipos de produtos
       tags: [ 'Tipo Produtos' ]
-      parameters:
-
-        - in: query
-          name: nomedb
-          schema:
-            type: string
-          description: Filtro para selecionar o banco de dados
-          required: true
-
       requestBody:
         required: true
         content:
@@ -248,14 +214,10 @@ paths:
           name: id
           schema:
             type: integer
+            minimum: 0          
+            maximum: 9999            
+            format: int32            
             description: Id do tipo produto
-          required: true
-
-        - in: query
-          name: nomedb
-          schema:
-            type: string
-          description: Filtro para selecionar o banco de dados
           required: true
 
       responses:
@@ -264,8 +226,6 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                items:
                   $ref: '#/components/schemas/TipoProdutos'
 
     put:
@@ -278,14 +238,10 @@ paths:
           name: id
           schema:
             type: integer
+            minimum: 0          
+            maximum: 9999    
+            format: int32                      
             description: Id do tipo produto a ser atualizado
-          required: true
-
-        - in: query
-          name: nomedb
-          schema:
-            type: string
-          description: Filtro para selecionar o banco de dados
           required: true
 
       responses:
@@ -306,14 +262,10 @@ paths:
           name: id
           schema:
             type: integer
+            minimum: 0          
+            maximum: 9999   
+            format: int32                     
             description: Id do tipo produto a ser inativado/ativado
-          required: true
-
-        - in: query
-          name: nomedb
-          schema:
-            type: string
-          description: Filtro para selecionar o banco de dados
           required: true
 
       responses:
@@ -330,14 +282,6 @@ paths:
       description: Retorna uma lista de carrinhos.
       summary: Buscar carrinhos
       tags: [ 'Carrinhos' ]
-      parameters:
-
-        - in: query
-          name: nomedb
-          schema:
-            type: string
-          description: Filtro para selecionar o banco de dados
-          required: true
 
       responses:
         '200':
@@ -346,6 +290,7 @@ paths:
             application/json:
               schema:
                 type: array
+                maxItems: 100
                 items:
                   $ref: '#/components/schemas/CarrinhosView'
 
@@ -361,15 +306,6 @@ paths:
             schema:
               $ref: '#/components/schemas/CarrinhosCreate'
       
-      parameters:
-
-        - in: query
-          name: nomedb
-          schema:
-            type: string
-          description: Filtro para selecionar o banco de dados
-          required: true
-
       responses:
         "201":
           description: Carrinho criado
@@ -389,14 +325,10 @@ paths:
           name: id
           schema:
             type: integer
+            minimum: 0          
+            maximum: 9999  
+            format: int32                      
             description: Id do carrinho
-          required: true
-
-        - in: query
-          name: nomedb
-          schema:
-            type: string
-          description: Filtro para selecionar o banco de dados
           required: true
 
       responses:
@@ -405,8 +337,6 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                items:
                   $ref: '#/components/schemas/CarrinhosComProdutos'
 
     put:
@@ -416,18 +346,14 @@ paths:
       tags: [ 'Carrinhos' ]
       parameters:
         - in: path
+          required: true
           name: id
           schema:
             type: integer
+            minimum: 0                      
+            maximum: 9999
+            format: int32            
             description: Id do carrinho
-          required: true
-
-        - in: query
-          name: nomedb
-          schema:
-            type: string
-          description: Filtro para selecionar o banco de dados
-          required: true
 
       requestBody:
         required: true
@@ -455,13 +381,9 @@ paths:
           schema:
             type: integer
             description: Id do carrinho
-          required: true
-
-        - in: query
-          name: nomedb
-          schema:
-            type: string
-          description: Filtro para selecionar o banco de dados
+            minimum: 0          
+            maximum: 9999       
+            format: int32                 
           required: true
 
       responses:
@@ -478,14 +400,6 @@ paths:
       description: Retorna uma lista de Usuarios.
       summary: Buscar Usuarios
       tags: [ 'Usuarios' ]
-      parameters:
-
-        - in: query
-          name: nomedb
-          schema:
-            type: string
-          description: Filtro para selecionar o banco de dados
-          required: true
 
       responses:
         '200':
@@ -494,6 +408,7 @@ paths:
             application/json:
               schema:
                 type: array
+                maxItems: 100
                 items:
                   $ref: '#/components/schemas/Usuarios'
 
@@ -509,15 +424,6 @@ paths:
             schema:
               $ref: '#/components/schemas/Usuarios'
       
-      parameters:
-
-        - in: query
-          name: nomedb
-          schema:
-            type: string
-          description: Filtro para selecionar o banco de dados
-          required: true
-
       responses:
         "201":
           description: Usuario criado
@@ -537,14 +443,10 @@ paths:
           name: id
           schema:
             type: integer
+            minimum: 0          
+            maximum: 9999       
+            format: int32                 
             description: Id do Usuario
-          required: true
-
-        - in: query
-          name: nomedb
-          schema:
-            type: string
-          description: Filtro para selecionar o banco de dados
           required: true
 
       responses:
@@ -554,6 +456,7 @@ paths:
             application/json:
               schema:
                 type: array
+                maxItems: 100
                 items:
                   $ref: '#/components/schemas/Usuarios'
 
@@ -567,14 +470,10 @@ paths:
           name: id
           schema:
             type: integer
+            minimum: 0          
+            maximum: 9999
+            format: int32            
             description: Id do usuário
-          required: true
-
-        - in: query
-          name: nomedb
-          schema:
-            type: string
-          description: Filtro para selecionar o banco de dados
           required: true
 
       requestBody:
@@ -602,14 +501,10 @@ paths:
           name: id
           schema:
             type: integer
+            minimum: 0          
+            maximum: 9999    
+            format: int32                    
             description: Id do Usuario
-          required: true
-
-        - in: query
-          name: nomedb
-          schema:
-            type: string
-          description: Filtro para selecionar o banco de dados
           required: true
 
       responses:
@@ -634,14 +529,6 @@ paths:
             schema:
               $ref: '#/components/schemas/Login'
       
-      parameters:
-        - in: query
-          name: nomedb
-          schema:
-            type: string
-          description: Filtro para selecionar o banco de dados
-          required: true
-
       responses:
         "200":
           description: Login realizado com sucesso
@@ -662,14 +549,10 @@ paths:
           name: id
           schema:
             type: integer
+            minimum: 0          
+            maximum: 9999  
+            format: int32                      
             description: Id do usuário
-          required: true
-
-        - in: query
-          name: nomedb
-          schema:
-            type: string
-          description: Filtro para selecionar o banco de dados
           required: true
 
       requestBody:
@@ -695,23 +578,21 @@ paths:
       tags: [ 'Buscar Cep' ]
       parameters:
         - in: path
+          required: true
           name: cep
           schema:
             type: string
             description: O CEP à ser buscado
-          required: true
+            pattern: "^[a-zA-Z0-9]+$" # adicionado padrão aqui
+            maxLength: 255
 
         - in: query
           name: id
           schema:
             type: integer
-
-        - in: query
-          name: nomedb
-          schema:
-            type: string
-          description: Filtro para selecionar o banco de dados
-          required: true
+            minimum: 0          
+            maximum: 9999
+            format: int32            
 
       responses:
         '200':
@@ -720,243 +601,372 @@ paths:
             application/json:
               schema:
                 type: array
+                maxItems: 100                
                 items:
-                  $ref: '#/components/schemas/CepResponse'  
+                  $ref: '#/components/schemas/CepResponse'
+  
 
 components:
   schemas:
 
     ProdutosView:
       type: object
+      additionalProperties: false
       properties:
         nome_produto:
           type: string
+          pattern: "^[a-zA-Z0-9]+$" # adicionado padrão aqui
+          maxLength: 255          
         descricao_produto:
           type: string
+          pattern: "^[a-zA-Z0-9]+$" # adicionado padrão aqui
+          maxLength: 1000          
         id_tipo_produto:
           type: integer
+          minimum: 0          
+          maximum: 9999   
+          format: int32               
         descricao_tipo_produto:
           type: string
+          pattern: "^[a-zA-Z0-9]+$" # adicionado padrão aqui
+          maxLength: 255
         preco:
           type: string
+          pattern: "R$00,00" # adicionado padrão aqui
+          maxLength: 255
         rating:
           type: integer
+          minimum: 0          
+          maximum: 9999   
+          format: int32                 
         ativo:
           type: boolean
         quantidade:
           type: integer
+          minimum: 0          
+          maximum: 9999   
+          format: int32                 
         caminho_imagem:
           type: string
+          pattern: "^[a-zA-Z0-9]+$" # adicionado padrão aqui
+          maxLength: 100
         criado_em:
           type: string
           format: date-time
+          maxLength: 10
+          pattern: "DD/MM/YYYY" # adicionado padrão aqui
         alterado_em:
           type: string
           format: date-time
+          pattern: "DD/MM/YYYY" # adicionado padrão aqui
+          maxLength: 10
         id_usuario:
           type: integer
+          minimum: 0          
+          maximum: 9999
+          format: int32          
         nome_usuario:
-          type: string                   
-
-    Produto:
-        type: object
-        properties:
-          nome_produto:
-            type: string
-          descricao_produto:
-           type: string
-          preco:
-            type: string
-          rating:
-            type: integer
-          ativo:
-            type: boolean
-          quantidade:
-            type: integer
-          caminho_imagem:
-            type: string
-          criado_em:
-            type: string
-            format: date-time
-          alterado_em:
-            type: string
-            format: date-time
-          id_usuario:
-            type: integer  
+          type: string
+          pattern: "^[a-zA-Z0-9]+$" # adicionado padrão aqui
+          maxLength: 100                             
 
     ProdutosInput:
-        type: object
-        properties:
-          nome_produto:
-            type: string
-          descricao_produto:
-           type: string
-          preco:
-            type: string
-          rating:
-            type: integer
-          ativo:
-            type: boolean
-          quantidade:
-            type: integer
-          caminho_imagem:
-            type: string
-          criado_em:
-            type: string
-            format: date-time
-          alterado_em:
-            type: string
-            format: date-time
-          id_usuario:
-            type: integer 
+      type: object
+      additionalProperties: false      
+      properties:
+        nome_produto:
+          type: string
+          pattern: "^[a-zA-Z0-9]+$" # adicionado padrão aqui
+          maxLength: 100            
+        descricao_produto:
+          type: string
+          pattern: "^[a-zA-Z0-9]+$" # adicionado padrão aqui
+          maxLength: 100           
+        preco:
+          type: string
+          pattern: "^[a-zA-Z0-9]+$" # adicionado padrão aqui
+          maxLength: 100            
+        rating:
+          type: integer
+          minimum: 0          
+          maximum: 9999     
+          format: int32                       
+        ativo:
+          type: boolean
+        quantidade:
+          type: integer
+          minimum: 0          
+          maximum: 9999
+          format: int32          
+        caminho_imagem:
+          type: string
+          pattern: "^[a-zA-Z0-9]+$" # adicionado padrão aqui
+          maxLength: 100            
+        criado_em:
+          type: string
+          format: date-time
+          pattern: "^[a-zA-Z0-9]+$" # adicionado padrão aqui
+          maxLength: 100            
+        alterado_em:
+          type: string
+          format: date-time
+          pattern: "^[a-zA-Z0-9]+$" # adicionado padrão aqui
+          maxLength: 100            
+        id_usuario:
+          type: integer 
+          minimum: 0          
+          maximum: 9999     
+          format: int32                       
 
     Usuarios:
-        type: object
-        properties:
-          nome:
-            type: string
-          cpf:
-           type: string
-          senha:
-            type: string
-          email:
-            type: string
-          data_nascimento:
-            type: string
-          telefone:
-            type: string
-          endereco:
-            type: string
-          endereco2:
-            type: string
-          cep:
-            type: string
-          id_tipo_usuario:
-            type: integer 
-          ativo:
-            type: boolean
-          criado_em:
-            type: string
-            format: date-time
-          alterado_em:
-            type: string
-            format: date-time
+      type: object
+      additionalProperties: false      
+      properties:
+        nome:
+          type: string
+          pattern: "^[a-zA-Z0-9]+$" # adicionado padrão aqui
+          maxLength: 100            
+        cpf:
+          type: string
+          pattern: "^[a-zA-Z0-9]+$" # adicionado padrão aqui
+          maxLength: 100           
+        senha:
+          type: string
+          pattern: "^[a-zA-Z0-9]+$" # adicionado padrão aqui
+          maxLength: 100            
+        email:
+          type: string
+          pattern: "^[a-zA-Z0-9]+$" # adicionado padrão aqui
+          maxLength: 100            
+        data_nascimento:
+          type: string
+          pattern: "^[a-zA-Z0-9]+$" # adicionado padrão aqui
+          maxLength: 100            
+        telefone:
+          type: string
+          pattern: "^[a-zA-Z0-9]+$" # adicionado padrão aqui
+          maxLength: 100            
+        endereco:
+          type: string
+          pattern: "^[a-zA-Z0-9]+$" # adicionado padrão aqui
+          maxLength: 100            
+        endereco2:
+          type: string
+          pattern: "^[a-zA-Z0-9]+$" # adicionado padrão aqui
+          maxLength: 100            
+        cep:
+          type: string
+          pattern: "^[a-zA-Z0-9]+$" # adicionado padrão aqui
+          maxLength: 10
+        id_tipo_usuario:
+          type: integer 
+          minimum: 0          
+          maximum: 9999    
+          format: int32                
+        ativo:
+          type: boolean
+        criado_em:
+          type: string
+          format: date-time
+          pattern: "^[a-zA-Z0-9]+$" # adicionado padrão aqui
+          maxLength: 100            
+        alterado_em:
+          type: string
+          format: date-time
+          pattern: "^[a-zA-Z0-9]+$" # adicionado padrão aqui
+          maxLength: 100            
 
     TipoProdutos:
-        type: object
-        properties:
-          descricao:
-           type: string
-          ativo:
-            type: boolean
-          criado_em:
-            type: string
-            format: date-time
-          alterado_em:
-            type: string
-            format: date-time
-          criado_por_id_usuario:
-            type: integer         
-          alterado_por_id_usuario:
-            type: integer           
+      type: object
+      additionalProperties: false
+      properties:
+        descricao:
+          type: string
+          pattern: "^[a-zA-Z0-9]+$" # adicionado padrão aqui
+          maxLength: 100           
+        ativo:
+          type: boolean
+        criado_em:
+          type: string
+          format: date-time
+          pattern: "^[a-zA-Z0-9]+$" # adicionado padrão aqui
+          maxLength: 100            
+        alterado_em:
+          type: string
+          format: date-time
+          pattern: "^[a-zA-Z0-9]+$" # adicionado padrão aqui
+          maxLength: 100
+        criado_por_id_usuario:
+          type: integer 
+          minimum: 0          
+          maximum: 9999   
+          format: int32                 
+        alterado_por_id_usuario:
+          type: integer 
+          minimum: 0          
+          maximum: 9999
+          format: int32                    
 
     CarrinhosView:
-        type: object
-        properties:
-          nome:
-           type: string
-          ativo:
-            type: boolean
-          finalizado:
-            type: boolean
-          id_usuario:
-            type: integer
-          id_produtos:
-            type: string           
-          criado_em:
-            type: string
-            format: date-time
-          alterado_em:
-            type: string
-            format: date-time
+      type: object
+      additionalProperties: false      
+      properties:
+        nome:
+         type: string
+         pattern: "^[a-zA-Z0-9]+$" # adicionado padrão aqui
+         maxLength: 100           
+        ativo:
+          type: boolean
+        finalizado:
+          type: boolean
+        id_usuario:
+          type: integer
+          maximum: 9999   
+          format: int32                   
+        id_produtos:
+          type: string   
+          pattern: "^[a-zA-Z0-9]+$" # adicionado padrão aqui
+          maxLength: 100                    
+        criado_em:
+          type: string
+          format: date-time
+          pattern: "^[a-zA-Z0-9]+$" # adicionado padrão aqui
+          maxLength: 100            
+        alterado_em:
+          type: string
+          format: date-time
+          pattern: "^[a-zA-Z0-9]+$" # adicionado padrão aqui
+          maxLength: 100            
     
     CarrinhosCreate:
-        type: object
-        properties:
-          id_usuario:
-            type: integer
-          id_produtos:
-            type: string  
-            required:
-              - id_produtos
-              - id_usuario               
+      type: object
+      additionalProperties: false
+      properties:
+        id_usuario:
+          type: integer
+          minimum: 0
+          maximum: 9999
+          format: int32                        
+        id_produtos:
+          type: integer
+          minimum: 0          
+          maximum: 9999
+          format: int32                               
 
     CarrinhosComProdutos:
-        type: object
-        properties:
-          nome:
-           type: string
-          ativo:
-            type: boolean
-          finalizado:
-            type: boolean
-          id_usuario:
-            type: integer
-          id_produtos:
-            type: string           
-          criado_em:
-            type: string
-            format: date-time
-          alterado_em:
-            type: string
-            format: date-time
-          dados_produtos:
+      type: object
+      additionalProperties: false      
+      properties:
+        nome:
+          type: string
+          pattern: "^[a-zA-Z0-9]+$" # adicionado padrão aqui
+          maxLength: 100
+        ativo:
+          type: boolean
+        finalizado:
+          type: boolean
+        id_usuario:
+          type: integer
+          minimum: 0          
+          maximum: 9999
+          format: int32          
+        id_produtos:
+          type: string  
+          pattern: "^[a-zA-Z0-9]+$" # adicionado padrão aqui
+          maxLength: 100                   
+        criado_em:
+          type: string
+          format: date-time
+          pattern: "^[a-zA-Z0-9]+$" # adicionado padrão aqui
+          maxLength: 100          
+        alterado_em:
+          type: string
+          format: date-time
+          pattern: "^[a-zA-Z0-9]+$" # adicionado padrão aqui
+          maxLength: 100          
+        dados_produtos:
+          type: array
+          maxItems: 100
+          items:
             $ref: '#/components/schemas/ProdutosView'
 
     Login:
-        type: object
-        properties:
-          email:
-            type: string
-          senha:
-            type: string            
+      type: object
+      additionalProperties: false
+      properties:
+        email:
+          type: string
+          pattern: "^[a-zA-Z0-9]+$" # adicionado padrão aqui
+          maxLength: 100          
+        senha:
+          type: string  
+          pattern: "^[a-zA-Z0-9]+$" # adicionado padrão aqui
+          maxLength: 100                    
 
     AlterarSenha:
-        type: object
-        properties:
-          senha:
-            type: string
-          senha_nova:
-            type: string  
+      type: object
+      additionalProperties: false      
+      properties:
+        senha:
+          type: string
+          pattern: "^[a-zA-Z0-9]+$" # adicionado padrão aqui
+          maxLength: 100          
+        senha_nova:
+          type: string  
+          pattern: "^[a-zA-Z0-9]+$" # adicionado padrão aqui
+          maxLength: 100          
 
     ResponseObject:
-        type: object
-        properties:
-          message:
-            type: string
+      additionalProperties: false
+      type: object
+      properties:
+        message:
+          type: string
+          pattern: "^[a-zA-Z0-9]+$" # adicionado padrão aqui
+          maxLength: 100          
 
     DeleteInput:
-        type: object
-        properties:
-          id_usuario:
-            type: integer
+      type: object
+      additionalProperties: false      
+      properties:
+        id_usuario:
+          type: integer
+          minimum: 0          
+          maximum: 9999    
+          format: int32                
 
     CepResponse:
-        type: object
-        properties:
-          code:
-            type: string            
-          state:
-            type: string
-          city:
-            type: string
-          district:
-            type: string
-          adress:
-            type: string
-          status:
-            type: integer
-          ok:
-            type: boolean
-          statusTet:
-            type: string                                                                                      
+      type: object
+      additionalProperties: false
+      properties:
+        code:
+          type: string
+          pattern: "^[a-zA-Z0-9]+$" # adicionado padrão aqui
+          maxLength: 100            
+        state:
+          type: string
+          pattern: "^[a-zA-Z0-9]+$" # adicionado padrão aqui
+          maxLength: 100          
+        city:
+          type: string
+          pattern: "^[a-zA-Z0-9]+$" # adicionado padrão aqui
+          maxLength: 100          
+        district:
+          type: string
+          pattern: "^[a-zA-Z0-9]+$" # adicionado padrão aqui
+          maxLength: 100          
+        adress:
+          type: string
+          pattern: "^[a-zA-Z0-9]+$" # adicionado padrão aqui
+          maxLength: 100          
+        status:
+          type: integer
+          minimum: 0          
+          maximum: 9999  
+          format: int32                  
+        ok:
+          type: boolean
+        statusText:
+          type: string
+          pattern: "^[a-zA-Z0-9]+$" # adicionado padrão aqui
+          maxLength: 100          
