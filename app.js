@@ -19,14 +19,31 @@ app.use(express.json());
 app.use(morgan('dev'));
 
 const httpServer = http.createServer(app);
+
 httpServer.listen(13700);
 
+/**
+ * Adiciona os headers necessários para a requisição.
+ */
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept, Authorization',
+  );
+  if (req.method === 'OPTIONS') {
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    return res.status(200).json({});
+  }
+  next();
+});
+
 app.use('/login', loginRoutes);
-app.use('/produtos', checkAuth, produtosRoutes);
-app.use('/usuarios', checkAuth, usuariosRoutes);
-app.use('/tipo_produtos', checkAuth, tipoProdutoRoutes);
-app.use('/carrinhos', checkAuth, carrinhosRoutes);
-app.use('/buscar_cep', checkAuth, buscarCepRoutes);
+app.use('/produtos', produtosRoutes);
+app.use('/usuarios', usuariosRoutes);
+app.use('/tipo_produtos', tipoProdutoRoutes);
+app.use('/carrinhos', carrinhosRoutes);
+app.use('/buscar_cep', buscarCepRoutes);
 
 app.use((req, res, next) => {
   const error = Error('Rota não encontrada.');
