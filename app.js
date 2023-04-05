@@ -13,6 +13,7 @@ const loginRoutes = require('./api/routes/login');
 const tipoProdutoRoutes = require('./api/routes/tipo_produtos');
 const carrinhosRoutes = require('./api/routes/carrinhos');
 const buscarCepRoutes = require('./api/routes/buscar_cep');
+const apiPagSeguroRoutes = require('./api/routes/api_pagseguro');
 
 const app = express();
 app.use(express.json());
@@ -39,6 +40,7 @@ app.use((req, res, next) => {
 });
 
 app.use('/login', loginRoutes);
+app.use('/api_pagseguro', apiPagSeguroRoutes);
 app.use('/produtos', produtosRoutes);
 app.use('/usuarios', usuariosRoutes);
 app.use('/tipo_produtos', tipoProdutoRoutes);
