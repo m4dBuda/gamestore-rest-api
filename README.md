@@ -14,7 +14,7 @@ To clone this API:
 
 ## Structure and Installation
 
-This API uses Clean Code Architecture, and it is defined as a restAPI that provides HTTP requests to a server, that handles JSON data and communicates directly to a database.
+This API is defined as a restAPI that provides HTTP requests to a server, that handles JSON data and communicates directly to a database.
 
 The data validation is done using `Validator` from NodeJS.
 The tests are done using `Jest` and `Supertest`
